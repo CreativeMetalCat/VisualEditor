@@ -1,6 +1,6 @@
 #include "JSONPropertyWidget.h"
 
-JSONPropertyWidget::JSONPropertyWidget(QWidget *parent, QString name)
+JSONPropertyWidget::JSONPropertyWidget(QWidget *parent, QString name, QJsonValue value)
 	: JSONWidgetBase(parent,name)
 {
 	ui.setupUi(this);
@@ -11,6 +11,34 @@ JSONPropertyWidget::JSONPropertyWidget(QWidget *parent, QString name)
     ui.typeBox->addItem("Text");
 
 	connect(ui.typeBox, &QComboBox::currentTextChanged, this, &JSONPropertyWidget::OnTypeSelectionChanged);
+
+	if (value != QJsonValue())
+	{
+		switch (value.type())
+		{
+		case  QJsonValue::String:
+			ui.typeBox->setCurrentIndex(0);
+			ui.stackedWidget->setCurrentIndex(0);
+			ui.valueEdit->setText(value.toString());
+			break;
+		case  QJsonValue::Bool:
+			ui.typeBox->setCurrentIndex(1);
+			ui.stackedWidget->setCurrentIndex(1);
+			ui.boolValue->setChecked(value.toBool());
+			break;
+		case  QJsonValue::Double:
+			ui.typeBox->setCurrentIndex(2);
+			ui.stackedWidget->setCurrentIndex(2);
+			ui.doubleSpinBox->setValue(value.toDouble());
+			break;
+		}
+		ui.nameEdit->setText(name);
+	}
+	else
+	{
+		ui.typeBox->setCurrentIndex(3);
+		ui.stackedWidget->setCurrentIndex(3);
+	}
 }
 
 void JSONPropertyWidget::OnTypeSelectionChanged(QString selection)

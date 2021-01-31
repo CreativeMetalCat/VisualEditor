@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <QVBoxLayout>
+#include "JsonEditorTreeModel.h"
 #include "ui_VisualEditor.h"
 
 class VisualEditor : public QMainWindow
@@ -12,4 +14,7 @@ public:
 
 private:
     Ui::VisualEditorClass ui;
+
+    QVBoxLayout* VerticalLayout;
+    QWidget* scrollWidget;
 };

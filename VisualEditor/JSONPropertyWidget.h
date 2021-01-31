@@ -9,7 +9,7 @@ class JSONPropertyWidget : public JSONWidgetBase
 	Q_OBJECT
 
 public:
-	JSONPropertyWidget(QWidget *parent = Q_NULLPTR, QString name = "object");
+	JSONPropertyWidget(QWidget *parent = Q_NULLPTR, QString name = "object",QJsonValue value = QJsonValue());
 	~JSONPropertyWidget();
 
 	virtual QJsonValue GenerateJsonValue() override;
