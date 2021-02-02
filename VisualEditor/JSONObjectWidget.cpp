@@ -101,17 +101,32 @@ void JSONObjectWidget::ChangeChildId(int newId)
 				{				
 					(*it)->Id = currentId;
 					currentId++;
-					ui->verticalLayoutBox->removeWidget(*it);				
-				}
-				for (auto it = ChildObjects.begin(); it != ChildObjects.end(); ++it)
-				{
+					//readd widget to reset positions
+					ui->verticalLayoutBox->removeWidget(*it);	
 					ui->verticalLayoutBox->addWidget(*it);
-				}			
+				}
 			}
 		}
 		else
 		{
 			qWarning() << sender()->parent()->objectName();
+		}
+	}
+}
+
+void JSONObjectWidget::DeleteChild()
+{
+	if (!ChildObjects.empty())
+	{
+		if (PropertyEditor* editor = qobject_cast<PropertyEditor*>(sender()->parent()))
+		{
+			ChildObjects.removeOne(editor->WidgetToEdit);
+
+			ui->verticalLayoutBox->removeWidget(editor->WidgetToEdit);
+
+			delete editor->WidgetToEdit;
+
+			VisualEditorGlobals::IsAnyPropertyBeingEdited = false;
 		}
 	}
 }
@@ -145,6 +160,8 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				PropertyEditor* propEdit = new PropertyEditor(this, this);				
 
 				connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, &JSONObjectWidget::ChangeChildId);
+
+				connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONObjectWidget::DeleteChild);
 
 				propEdit->showNormal();
 

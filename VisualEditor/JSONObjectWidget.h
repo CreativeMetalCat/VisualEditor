@@ -33,6 +33,11 @@ private slots:
 	/// </summary>
 	/// <param name="newId"></param>
 	void ChangeChildId(int newId); 
+
+	/// <summary>
+	/// Removes child told by PropertyEditor
+	/// </summary>
+	void DeleteChild();
 private:
 	Ui::JSONObjectWidget *ui;
 

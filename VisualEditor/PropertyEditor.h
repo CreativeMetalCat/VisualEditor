@@ -16,6 +16,8 @@ public:
 	virtual void closeEvent(QCloseEvent*)override;
 
 	QSpinBox* GetIdSpinBox();
+
+	QPushButton* GetDeleteButton();
 	
 	JSONWidgetBase* WidgetToEdit = nullptr;
 private:

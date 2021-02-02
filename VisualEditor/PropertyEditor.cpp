@@ -32,3 +32,8 @@ QSpinBox* PropertyEditor::GetIdSpinBox()
 {
 	return ui.spinBox;
 }
+
+QPushButton* PropertyEditor::GetDeleteButton()
+{
+	return ui.pushButton;
+}
