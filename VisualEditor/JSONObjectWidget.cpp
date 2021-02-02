@@ -2,6 +2,7 @@
 #include "ui_JSONObjectWidget.h"
 #include "JSONPropertyWidget.h"
 #include <QJsonObject>
+#include <QInputDialog>
 
 JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QString name )
 	: JSONWidgetBase(parent,name)
@@ -33,11 +34,8 @@ JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QStr
 			}
 		}
 	}
-}
 
-JSONObjectWidget::~JSONObjectWidget()
-{
-	delete ui;
+	ui->groupBox->installEventFilter(this);
 }
 
 QJsonValue JSONObjectWidget::GenerateJsonValue()
@@ -65,4 +63,24 @@ void JSONObjectWidget::AddNewProperty(QString name, QJsonValue value)
 {
 	JSONPropertyWidget* jsonProperty = new JSONPropertyWidget(this, name, value);
 	ui->verticalLayoutBox->addWidget(jsonProperty);
+}
+
+bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
+{
+	if (event->type() == QEvent::MouseButtonPress && object == ui->groupBox)
+	{
+		bool ok = false;
+		QString newTitle = QInputDialog::getText(this, "Enter new name", "",QLineEdit::Normal, ui->groupBox->title(),&ok);
+		if (newTitle != "" && ok)
+		{
+			ui->groupBox->setTitle(newTitle);
+		}
+		return true;
+	}
+	return false;
+}
+
+JSONObjectWidget::~JSONObjectWidget()
+{
+	delete ui;
 }

@@ -4,6 +4,8 @@ JSONWidgetBase::JSONWidgetBase(QWidget *parent, QString name)
 	: QWidget(parent), Name(name)
 {
 	ui.setupUi(this);
+
+	setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
 }
 
 JSONWidgetBase::~JSONWidgetBase()

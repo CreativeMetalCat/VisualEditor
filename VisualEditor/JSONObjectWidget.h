@@ -27,6 +27,9 @@ public:
 	/// <param name="value">data to load from</param>
 	void AddNewProperty(QString name,QJsonValue value);
 
+
 private:
 	Ui::JSONObjectWidget *ui;
+
+	bool eventFilter(QObject* object, QEvent* event);
 };
