@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include < QDragEnterEvent>
 #include <QMimeData>
+#include "PropertyEditor.h"
 
 JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QString name, bool AllowNameChange)
 	: JSONWidgetBase(parent,name)
@@ -73,7 +74,7 @@ void JSONObjectWidget::AddNewProperty(QString name, QJsonValue value)
 
 bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 {
-	if (object == ui->groupBox)
+	if (object == ui->groupBox )
 	{
 		if (event->type() == QEvent::MouseButtonPress && ui->groupBox->property("AllowNameChange").toBool())
 		{
@@ -86,16 +87,19 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				{
 					ui->groupBox->setTitle(newTitle);
 				}
+				mouseEvent->accept();
 				return true;
 			}
-			else if (mouseEvent->button() == Qt::RightButton)
-			{
-				//spawn a tree view with buttons to select which object to reparent to
-			}
+		}
+		else if (event->type() == QEvent::ContextMenu && !VisualEditorGlobals::IsAnyPropertyBeingEdited)
+		{
+			//open a property editor window
+			PropertyEditor* propEdit = new PropertyEditor(this);
+			propEdit->showNormal();
+			VisualEditorGlobals::IsAnyPropertyBeingEdited = true;
 		}
 		else if(event->type() == QEvent::DragEnter)
-		{
-			
+		{		
 			QDragEnterEvent* dragEvent = static_cast<QDragEnterEvent*>(event);
 			if (dragEvent->mimeData()->hasFormat("toolbox/property"))
 			{
@@ -113,8 +117,7 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 		{
 			QDropEvent* drop = static_cast<QDropEvent*>(event);
 			if (drop->mimeData()->hasFormat("toolbox/property"))
-			{
-				return true;
+			{		
 				//spawn new empty property
 				JSONPropertyWidget* prop = new JSONPropertyWidget(this);
 				ui->verticalLayoutBox->addWidget(prop);

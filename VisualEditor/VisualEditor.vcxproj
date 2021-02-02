@@ -90,12 +90,14 @@
     <QtUic Include="JSONObjectWidget.ui" />
     <QtUic Include="JSONPropertyWidget.ui" />
     <QtUic Include="JSONWidgetBase.ui" />
+    <QtUic Include="PropertyEditor.ui" />
     <QtUic Include="VisualEditor.ui" />
     <QtMoc Include="VisualEditor.h" />
-    <ClCompile Include="JsonEditorTreeModel.cpp" />
+    <ClCompile Include="globals.cpp" />
     <ClCompile Include="JSONObjectWidget.cpp" />
     <ClCompile Include="JSONPropertyWidget.cpp" />
     <ClCompile Include="JSONWidgetBase.cpp" />
+    <ClCompile Include="PropertyEditor.cpp" />
     <ClCompile Include="ToolBoxLabel.cpp" />
     <ClCompile Include="VisualEditor.cpp" />
     <ClCompile Include="main.cpp" />
@@ -110,8 +112,11 @@
     <QtMoc Include="JSONPropertyWidget.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="JsonEditorTreeModel.h" />
+    <QtMoc Include="PropertyEditor.h" />
     <QtMoc Include="ToolBoxLabel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="globals.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

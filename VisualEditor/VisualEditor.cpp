@@ -3,7 +3,6 @@
 #include <QMessageBox>
 #include <QJsonDocument>
 #include "JSONObjectWidget.h"
-#include "JsonEditorTreeModel.h"
 #include "JSONPropertyWidget.h"
 #include <QListView>
 #include "ToolBoxLabel.h"
@@ -44,7 +43,6 @@ VisualEditor::VisualEditor(QWidget *parent)
             {
                 JSONObjectWidget* object = new JSONObjectWidget(docObject.value((*it)).toObject(), this, (*it));
                 VerticalLayout->addWidget(object);
-                
             }
             else
             {
@@ -60,9 +58,9 @@ VisualEditor::VisualEditor(QWidget *parent)
     ui.ToolBox->setWidget(toolBoxScrollWidget);
 
     //add default buttons to tool box
-    ToolBoxLabel* propertyButton = new ToolBoxLabel("Property", this);
+    ToolBoxLabel* propertyButton = new ToolBoxLabel("Property", this, ToolBoxLabel::Type::Property);
     toolBoxScrollVertialLayout->addWidget(propertyButton);
 
-    ToolBoxLabel* objectButton = new ToolBoxLabel("JsonObject", this);
+    ToolBoxLabel* objectButton = new ToolBoxLabel("JsonObject", this, ToolBoxLabel::Type::Object);
     toolBoxScrollVertialLayout->addWidget(objectButton);
 }

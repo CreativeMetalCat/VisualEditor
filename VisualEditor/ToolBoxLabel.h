@@ -17,8 +17,8 @@ public:
         CustomObject
     };
 
-    ToolBoxLabel(QWidget* parent = Q_NULLPTR);
-    ToolBoxLabel(QString text,QWidget* parent = Q_NULLPTR);
+    ToolBoxLabel(QWidget* parent = Q_NULLPTR,Type type = Type::Property);
+    ToolBoxLabel(QString text,QWidget* parent = Q_NULLPTR, Type type = Type::Property);
     ~ToolBoxLabel();
 
     Type ItemType = Type::Property;

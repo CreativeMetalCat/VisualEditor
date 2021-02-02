@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QVBoxLayout>
-#include "JsonEditorTreeModel.h"
+#include "JSONObjectWidget.h"
 #include "ui_VisualEditor.h"
 
 class VisualEditor : public QMainWindow
@@ -11,7 +11,6 @@ class VisualEditor : public QMainWindow
 
 public:
     VisualEditor(QWidget *parent = Q_NULLPTR);
-
 private:
     Ui::VisualEditorClass ui;
 

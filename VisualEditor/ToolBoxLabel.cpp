@@ -2,15 +2,9 @@
 #include <QDrag>
 #include <QMimeData>
 
-ToolBoxLabel::ToolBoxLabel(QWidget* parent):QLabel("None",parent)
-{
+ToolBoxLabel::ToolBoxLabel(QWidget* parent, Type type) :QLabel("None", parent), ItemType(type) {}
 
-}
-
-ToolBoxLabel::ToolBoxLabel(QString text, QWidget* parent) : QLabel(text, parent)
-{
-
-}
+ToolBoxLabel::ToolBoxLabel(QString text, QWidget* parent, Type type) : QLabel(text, parent), ItemType(type) {}
 
 ToolBoxLabel::~ToolBoxLabel()
 {

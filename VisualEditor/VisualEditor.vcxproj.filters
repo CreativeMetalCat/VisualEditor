@@ -50,10 +50,13 @@
     <ClCompile Include="JSONPropertyWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JsonEditorTreeModel.cpp">
+    <ClCompile Include="ToolBoxLabel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ToolBoxLabel.cpp">
+    <ClCompile Include="PropertyEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -70,6 +73,9 @@
     <QtMoc Include="ToolBoxLabel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="PropertyEditor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="JSONObjectWidget.ui">
@@ -81,9 +87,12 @@
     <QtUic Include="JSONPropertyWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="PropertyEditor.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="JsonEditorTreeModel.h">
+    <ClInclude Include="globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
