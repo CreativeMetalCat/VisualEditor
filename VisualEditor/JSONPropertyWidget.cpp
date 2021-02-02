@@ -12,6 +12,7 @@ JSONPropertyWidget::JSONPropertyWidget(QWidget *parent, QString name, QJsonValue
     ui.typeBox->addItem("Text");
 
 	connect(ui.typeBox, &QComboBox::currentTextChanged, this, &JSONPropertyWidget::OnTypeSelectionChanged);
+	connect(ui.nameEdit, &QLineEdit::textChanged, this, &JSONPropertyWidget::OnTextChanged);
 
 	if (value != QJsonValue())
 	{
@@ -104,6 +105,14 @@ void JSONPropertyWidget::contextMenuEvent(QContextMenuEvent*event)
 void JSONPropertyWidget::OnIdSpinBoxValueChanged(int newId)
 {
 	 ChangeChildId(newId);
+}
+
+void JSONPropertyWidget::OnTextChanged(QString text)
+{
+	if (text != "")
+	{
+		Name = text;
+	}
 }
 
 

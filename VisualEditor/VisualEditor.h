@@ -21,4 +21,6 @@ private:
     QVBoxLayout* toolBoxScrollVertialLayout;
 
     JSONObjectWidget* fileObject;
+private slots:
+    void SaveCurrentFile();
 };

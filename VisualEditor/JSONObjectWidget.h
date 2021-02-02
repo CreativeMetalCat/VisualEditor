@@ -9,7 +9,8 @@ class JSONObjectWidget : public JSONWidgetBase
 	Q_OBJECT
 
 public:
-	JSONObjectWidget(QJsonObject,QWidget *parent = Q_NULLPTR, QString name = "object",bool AllowNameChange = true);
+	JSONObjectWidget(QJsonObject, QWidget* parent = Q_NULLPTR, QString name = "object", bool AllowNameChange = true, bool isArray = false);
+	JSONObjectWidget(QJsonArray, QWidget* parent = Q_NULLPTR, QString name = "object", bool AllowNameChange = true,bool isArray = false);
 	~JSONObjectWidget();
 
 	QVector<JSONWidgetBase*>ChildObjects = QVector<JSONWidgetBase*>();
@@ -39,6 +40,7 @@ public:
 	/// </summary>
 	virtual void DeleteChild()override;
 
+	bool IsArray = false;
 
 private slots:
 	/// <summary>
@@ -51,6 +53,8 @@ private slots:
 	/// Removes child told by PropertyEditor
 	/// </summary>
 	void OnDeleteButtonPressed() { DeleteChild(); }
+
+	void OnIsArrayChanged(bool newState);
 private:
 	Ui::JSONObjectWidget *ui;
 

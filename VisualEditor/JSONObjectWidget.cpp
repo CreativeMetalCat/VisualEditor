@@ -7,9 +7,10 @@
 #include < QDragEnterEvent>
 #include <QMimeData>
 #include "PropertyEditor.h"
+#include <QJsonArray>
 
-JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QString name, bool AllowNameChange)
-	: JSONWidgetBase(parent,name)
+JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QString name, bool AllowNameChange,bool isArray)
+	: JSONWidgetBase(parent,name),IsArray(isArray)
 {
 	ui = new Ui::JSONObjectWidget();
 	ui->setupUi(this);
@@ -18,7 +19,7 @@ JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QStr
 
 	QStringList keys = jsonObject.keys();
 
-	ui->groupBox->setTitle(name);
+	ui->groupBox->setTitle(name + QString(IsArray ? "[ ]" : ""));
 	
 	ui->groupBox->setProperty("AllowNameChange", AllowNameChange);
 
@@ -27,10 +28,18 @@ JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QStr
 		int currentId = 0;
 		for (auto it = keys.begin(); it != keys.end(); ++it)
 		{
-			if (jsonObject.value((*it)).isObject())
+			if (jsonObject.value((*it)).isObject() || jsonObject.value((*it)).isArray())
 			{
 				//generate object
-				JSONObjectWidget* object = new JSONObjectWidget(jsonObject.value((*it)).toObject(), this, (*it));
+				JSONObjectWidget* object;
+				if (jsonObject.value((*it)).isArray())
+				{
+					object = new JSONObjectWidget(jsonObject.value((*it)).toArray(), this, (*it), true, true);
+				}
+				else
+				{
+					object = new JSONObjectWidget(jsonObject.value((*it)).toObject(), this, (*it));
+				}
 				object->Id = currentId;
 				ui->verticalLayoutBox->addWidget(object);
 				ChildObjects.append(object);
@@ -51,19 +60,82 @@ JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QStr
 	ui->groupBox->setAcceptDrops(true);
 }
 
-QJsonValue JSONObjectWidget::GenerateJsonValue()
+JSONObjectWidget::JSONObjectWidget(QJsonArray jsonArray, QWidget* parent, QString name, bool AllowNameChange,bool isArray)
+	: JSONWidgetBase(parent, name), IsArray(isArray)
 {
-	QJsonObject result;
 
-	if (!ChildObjects.empty())
+	ui = new Ui::JSONObjectWidget();
+	ui->setupUi(this);
+
+	Type = QJsonValue::Object;
+
+	ui->groupBox->setTitle(name + QString(IsArray ? "[ ]" : ""));
+
+	ui->groupBox->setProperty("AllowNameChange", AllowNameChange);
+
+	int currentId = 0;
+	for (auto it = jsonArray.begin(); it != jsonArray.end(); ++it)
 	{
-		for (int i = 0; i < ChildObjects.count(); i++)
+		if ((*it).isObject() || (*it).isArray())
 		{
-			result[ChildObjects[i]->Name] = ChildObjects[i]->GenerateJsonValue();
+			//generate object
+			JSONObjectWidget* object;
+			if ((*it).isArray())
+			{
+				object = new JSONObjectWidget((*it).toArray(), this, "arrayItem" + QString(currentId), true, true);
+			}
+			else
+			{
+				object = new JSONObjectWidget((*it).toObject(), this, "arrayItem" + QString(currentId));
+			}
+			object->Id = currentId;
+			ui->verticalLayoutBox->addWidget(object);
+			ChildObjects.append(object);
 		}
+		else
+		{
+			//generate properties
+			JSONPropertyWidget* jsonProp = new JSONPropertyWidget(this, "arrayItem" + QString(currentId),(*it));
+			jsonProp->Id = currentId;
+			ui->verticalLayoutBox->addWidget(jsonProp);
+			ChildObjects.append(jsonProp);
+		}
+		currentId++;
 	}
 
-	return result;
+
+
+	ui->groupBox->installEventFilter(this);
+	ui->groupBox->setAcceptDrops(true);
+}
+
+QJsonValue JSONObjectWidget::GenerateJsonValue()
+{
+	if (IsArray)
+	{
+		//objects in array can not have names
+		QJsonArray array;
+		if (!ChildObjects.empty())
+		{
+			for (int i = 0; i < ChildObjects.count(); i++)
+			{
+				array.append(ChildObjects[i]->GenerateJsonValue());
+			}
+		}
+		return QJsonValue(array);
+	}
+	else
+	{
+		QJsonObject result;
+		if (!ChildObjects.empty())
+		{
+			for (int i = 0; i < ChildObjects.count(); i++)
+			{
+				result[ChildObjects[i]->Name] = ChildObjects[i]->GenerateJsonValue();
+			}
+		}
+		return result;
+	}
 }
 
 void JSONObjectWidget::AddNewProperty()
@@ -141,10 +213,10 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 			if (mouseEvent->button() == Qt::LeftButton)
 			{
 				bool ok = false;
-				QString newTitle = QInputDialog::getText(this, "Enter new name", "", QLineEdit::Normal, ui->groupBox->title(), &ok);
+				QString newTitle = QInputDialog::getText(this, "Enter new name", "", QLineEdit::Normal, Name, &ok);
 				if (newTitle != "" && ok)
 				{
-					ui->groupBox->setTitle(newTitle);
+					ui->groupBox->setTitle(newTitle + QString(IsArray ? "[]" : ""));
 					Name = newTitle;
 				}
 				mouseEvent->accept();
@@ -157,15 +229,13 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 			//parent()->parent() = First parent() is the object window, second parent() is actual parent of the object window
 			if (JSONObjectWidget* obj = qobject_cast<JSONObjectWidget*>(parent()->parent()))
 			{
-				PropertyEditor* propEdit = new PropertyEditor(this, this);				
-
-				//connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, &JSONObjectWidget::OnIdSpinBoxValueChanged);
-
-				//connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONObjectWidget::OnDeleteButtonPressed);
+				PropertyEditor* propEdit = new PropertyEditor(this, this);		
 
 				connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, &JSONWidgetBase::ChangeChildId);
 
 				connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONWidgetBase::DeleteChild);
+
+				connect(propEdit->GetIsArrayCheckBox(), &QCheckBox::stateChanged, this, &JSONObjectWidget::OnIsArrayChanged);
 
 				propEdit->showNormal();
 
@@ -220,12 +290,14 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 	return false;
 }
 
+void JSONObjectWidget::OnIsArrayChanged(bool newState)
+{
+	IsArray = newState;
+	ui->groupBox->setTitle(Name + QString(IsArray ? "[ ]" : ""));
+}
+
+
 JSONObjectWidget::~JSONObjectWidget()
 {
 	delete ui;
-}
-
-bool eventFilter(QObject* object, QEvent* event)
-{
-	return false;
 }

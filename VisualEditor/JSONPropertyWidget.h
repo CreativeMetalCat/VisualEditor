@@ -31,4 +31,6 @@ private slots:
 	/// Removes child told by PropertyEditor
 	/// </summary>
 	void OnDeleteButtonPressed() { DeleteChild(); }
+
+	void OnTextChanged(QString text);
 };

@@ -16,7 +16,6 @@ VisualEditor::VisualEditor(QWidget *parent)
     VerticalLayout = new QVBoxLayout(scrollWidget);
     ui.scrollArea->setWidget(scrollWidget);
 
-
     QFile file("json/test.json");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
@@ -45,4 +44,20 @@ VisualEditor::VisualEditor(QWidget *parent)
 
     ToolBoxLabel* objectButton = new ToolBoxLabel("JsonObject", this, ToolBoxLabel::Type::Object);
     toolBoxScrollVertialLayout->addWidget(objectButton);
+
+    connect(ui.actionSave_File, &QAction::triggered, this, &VisualEditor::SaveCurrentFile);
+}
+
+void VisualEditor::SaveCurrentFile()
+{
+    QFile file("json/test.json");
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
+    {
+        QMessageBox::warning(this, "Warinig!", "Failed to open file!", QMessageBox::Ok, QMessageBox::Ok);
+    }
+
+    //Create and save file
+    QJsonDocument boardDocument(fileObject->GenerateJsonValue().toObject());
+    file.write(boardDocument.toJson());
+
 }

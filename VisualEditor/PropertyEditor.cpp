@@ -1,5 +1,6 @@
 #include "PropertyEditor.h"
 #include "globals.h"
+#include "JSONPropertyWidget.h"
 
 PropertyEditor::PropertyEditor(JSONWidgetBase* widgetToEdit, QWidget *parent)
 	: QWidget(parent),WidgetToEdit(widgetToEdit)
@@ -12,6 +13,15 @@ PropertyEditor::PropertyEditor(JSONWidgetBase* widgetToEdit, QWidget *parent)
 		this->setWindowTitle("Property Editor - " + WidgetToEdit->Name);
 
 		ui.spinBox->setValue(WidgetToEdit->Id);
+		
+		if (qobject_cast<JSONPropertyWidget*>(WidgetToEdit))
+		{
+			ui.isArrayCheckBox->setEnabled(false);
+		}
+		else
+		{
+			ui.isArrayCheckBox->setEnabled(true);
+		}
 	}
 	else
 	{
@@ -36,4 +46,9 @@ QSpinBox* PropertyEditor::GetIdSpinBox()
 QPushButton* PropertyEditor::GetDeleteButton()
 {
 	return ui.pushButton;
+}
+
+QCheckBox* PropertyEditor::GetIsArrayCheckBox()
+{
+	return ui.isArrayCheckBox;
 }

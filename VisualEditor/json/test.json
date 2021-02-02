@@ -1,25 +1,33 @@
 {
-    "item":
-    {
-        "name":"eef"
+    "item": {
+        "name": 0
     },
-    "oop":
-    {
+    "item1": [
+        {
+            "value":"no"
+        },
+        {
+        },
+        {
+        },
+        "eef"
+    ],
+    "item2": {
+        "name": "eef"
     },
-    "item1":
-    {
-        "name":"eef"
+    "item3": {
+        "name": "eef",
+        "object": true
     },
-    "item2":
-    {
-        "name":"eef"
+    "notobject": {
+        "rtyukl": {
+            "89": null,
+            "object": "98989"
+        }
     },
-    "item3":
-    {
-        "name":"eef"
-    },
-    "item4":
-    {
-        "name":"eef"
+    "oop": {
+        "45": null,
+        "456454": 4545,
+        "object": 0
     }
 }

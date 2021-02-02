@@ -19,6 +19,11 @@ public:
 	//*Has no effect on how editor works
 	QString Name;
 
+	/// <summary>
+	/// generate json value for writing into file
+	/// </summary>
+	/// <param name="isInArray">objects in array can not have names</param>
+	/// <returns>value to write</returns>
 	virtual QJsonValue GenerateJsonValue();
 
 	//index of the item in parent's array

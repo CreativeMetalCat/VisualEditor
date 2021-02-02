@@ -18,6 +18,8 @@ public:
 	QSpinBox* GetIdSpinBox();
 
 	QPushButton* GetDeleteButton();
+
+	QCheckBox* GetIsArrayCheckBox();
 	
 	JSONWidgetBase* WidgetToEdit = nullptr;
 private:
