@@ -27,6 +27,12 @@ public:
 	/// <param name="value">data to load from</param>
 	void AddNewProperty(QString name,QJsonValue value);
 
+private slots:
+	/// <summary>
+	/// Changes child id
+	/// </summary>
+	/// <param name="newId"></param>
+	void ChangeChildId(int newId); 
 private:
 	Ui::JSONObjectWidget *ui;
 

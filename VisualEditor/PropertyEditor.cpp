@@ -7,8 +7,16 @@ PropertyEditor::PropertyEditor(JSONWidgetBase* widgetToEdit, QWidget *parent)
 	ui.setupUi(this);
 
 	this->setWindowFlag(Qt::Window);
+	if (WidgetToEdit)
+	{
+		this->setWindowTitle("Property Editor - " + WidgetToEdit->Name);
 
-	this->setWindowTitle("Property Editor - " + WidgetToEdit->Name);
+		ui.spinBox->setValue(WidgetToEdit->Id);
+	}
+	else
+	{
+		close();
+	}
 }
 
 PropertyEditor::~PropertyEditor()
@@ -18,4 +26,9 @@ PropertyEditor::~PropertyEditor()
 void PropertyEditor::closeEvent(QCloseEvent*)
 {
 	VisualEditorGlobals::IsAnyPropertyBeingEdited = false;
+}
+
+QSpinBox* PropertyEditor::GetIdSpinBox()
+{
+	return ui.spinBox;
 }

@@ -35,24 +35,6 @@ VisualEditor::VisualEditor(QWidget *parent)
     fileObject = new JSONObjectWidget(docObject, this, "file",false);
     VerticalLayout->addWidget(fileObject);
 
-    if (!keys.empty() && false)
-    {
-        for (auto it = keys.begin(); it != keys.end(); ++it)
-        {
-            if (docObject.value((*it)).isObject())
-            {
-                JSONObjectWidget* object = new JSONObjectWidget(docObject.value((*it)).toObject(), this, (*it));
-                VerticalLayout->addWidget(object);
-            }
-            else
-            {
-                //generate properties
-                JSONPropertyWidget* jsonProp = new JSONPropertyWidget(this, (*it), docObject.value((*it)));
-                VerticalLayout->addWidget(jsonProp);
-            }
-        }
-    }
-
     toolBoxScrollWidget = new QWidget(this);
     toolBoxScrollVertialLayout = new QVBoxLayout(toolBoxScrollWidget);
     ui.ToolBox->setWidget(toolBoxScrollWidget);

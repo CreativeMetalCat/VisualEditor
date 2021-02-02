@@ -14,7 +14,11 @@ public:
 	~PropertyEditor();
 
 	virtual void closeEvent(QCloseEvent*)override;
+
+	QSpinBox* GetIdSpinBox();
+	
+	JSONWidgetBase* WidgetToEdit = nullptr;
 private:
 	Ui::PropertyEditor ui;
-	JSONWidgetBase* WidgetToEdit = nullptr;
+	
 };
