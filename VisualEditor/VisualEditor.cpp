@@ -6,6 +6,7 @@
 #include "JsonEditorTreeModel.h"
 #include "JSONPropertyWidget.h"
 #include <QListView>
+#include "ToolBoxLabel.h"
 
 VisualEditor::VisualEditor(QWidget *parent)
     : QMainWindow(parent)
@@ -32,7 +33,10 @@ VisualEditor::VisualEditor(QWidget *parent)
 
     QStringList keys = docObject.keys();
 
-    if (!keys.empty())
+    fileObject = new JSONObjectWidget(docObject, this, "file",false);
+    VerticalLayout->addWidget(fileObject);
+
+    if (!keys.empty() && false)
     {
         for (auto it = keys.begin(); it != keys.end(); ++it)
         {
@@ -50,4 +54,15 @@ VisualEditor::VisualEditor(QWidget *parent)
             }
         }
     }
+
+    toolBoxScrollWidget = new QWidget(this);
+    toolBoxScrollVertialLayout = new QVBoxLayout(toolBoxScrollWidget);
+    ui.ToolBox->setWidget(toolBoxScrollWidget);
+
+    //add default buttons to tool box
+    ToolBoxLabel* propertyButton = new ToolBoxLabel("Property", this);
+    toolBoxScrollVertialLayout->addWidget(propertyButton);
+
+    ToolBoxLabel* objectButton = new ToolBoxLabel("JsonObject", this);
+    toolBoxScrollVertialLayout->addWidget(objectButton);
 }

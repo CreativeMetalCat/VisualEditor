@@ -3,8 +3,11 @@
 #include "JSONPropertyWidget.h"
 #include <QJsonObject>
 #include <QInputDialog>
+#include <QMouseEvent>
+#include < QDragEnterEvent>
+#include <QMimeData>
 
-JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QString name )
+JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QString name, bool AllowNameChange)
 	: JSONWidgetBase(parent,name)
 {
 	ui = new Ui::JSONObjectWidget();
@@ -15,6 +18,8 @@ JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QStr
 	QStringList keys = jsonObject.keys();
 
 	ui->groupBox->setTitle(name);
+	
+	ui->groupBox->setProperty("AllowNameChange", AllowNameChange);
 
 	if (!keys.empty())
 	{
@@ -36,6 +41,7 @@ JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QStr
 	}
 
 	ui->groupBox->installEventFilter(this);
+	ui->groupBox->setAcceptDrops(true);
 }
 
 QJsonValue JSONObjectWidget::GenerateJsonValue()
@@ -67,15 +73,67 @@ void JSONObjectWidget::AddNewProperty(QString name, QJsonValue value)
 
 bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 {
-	if (event->type() == QEvent::MouseButtonPress && object == ui->groupBox)
+	if (object == ui->groupBox)
 	{
-		bool ok = false;
-		QString newTitle = QInputDialog::getText(this, "Enter new name", "",QLineEdit::Normal, ui->groupBox->title(),&ok);
-		if (newTitle != "" && ok)
+		if (event->type() == QEvent::MouseButtonPress && ui->groupBox->property("AllowNameChange").toBool())
 		{
-			ui->groupBox->setTitle(newTitle);
+			QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+			if (mouseEvent->button() == Qt::LeftButton)
+			{
+				bool ok = false;
+				QString newTitle = QInputDialog::getText(this, "Enter new name", "", QLineEdit::Normal, ui->groupBox->title(), &ok);
+				if (newTitle != "" && ok)
+				{
+					ui->groupBox->setTitle(newTitle);
+				}
+				return true;
+			}
+			else if (mouseEvent->button() == Qt::RightButton)
+			{
+				//spawn a tree view with buttons to select which object to reparent to
+			}
 		}
-		return true;
+		else if(event->type() == QEvent::DragEnter)
+		{
+			
+			QDragEnterEvent* dragEvent = static_cast<QDragEnterEvent*>(event);
+			if (dragEvent->mimeData()->hasFormat("toolbox/property"))
+			{
+				dragEvent->acceptProposedAction();
+				return true;
+			}
+			if (dragEvent->mimeData()->hasFormat("toolbox/object"))
+			{
+				dragEvent->acceptProposedAction();
+				return true;
+			}
+			
+		}
+		else if (event->type() == QEvent::Drop)
+		{
+			QDropEvent* drop = static_cast<QDropEvent*>(event);
+			if (drop->mimeData()->hasFormat("toolbox/property"))
+			{
+				return true;
+				//spawn new empty property
+				JSONPropertyWidget* prop = new JSONPropertyWidget(this);
+				ui->verticalLayoutBox->addWidget(prop);
+			}
+			if (drop->mimeData()->hasFormat("toolbox/object"))
+			{
+				if (drop->mimeData()->hasFormat("toolbox/customObjectInfo"))
+				{
+					qWarning() << QString::fromUtf8(drop->mimeData()->data("toolbox/customObjectInfo"));
+				}
+				else
+				{
+					//spawn new empty object
+					JSONObjectWidget* obj = new JSONObjectWidget(QJsonObject(), this);
+					ui->verticalLayoutBox->addWidget(obj);
+				}
+			}
+			return true;
+		}
 	}
 	return false;
 }

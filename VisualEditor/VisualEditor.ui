@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>709</width>
-    <height>762</height>
+    <width>885</width>
+    <height>715</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,8 +34,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>689</width>
-         <height>689</height>
+         <width>781</width>
+         <height>642</height>
         </rect>
        </property>
       </widget>
@@ -48,7 +48,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>709</width>
+     <width>885</width>
      <height>21</height>
     </rect>
    </property>
@@ -65,6 +65,12 @@
    <property name="locale">
     <locale language="English" country="UnitedStates"/>
    </property>
+  </widget>
+  <widget class="QDockWidget" name="ToolBox">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="ToolBoxContents"/>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

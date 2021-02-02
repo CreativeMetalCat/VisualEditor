@@ -96,6 +96,7 @@
     <ClCompile Include="JSONObjectWidget.cpp" />
     <ClCompile Include="JSONPropertyWidget.cpp" />
     <ClCompile Include="JSONWidgetBase.cpp" />
+    <ClCompile Include="ToolBoxLabel.cpp" />
     <ClCompile Include="VisualEditor.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -110,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonEditorTreeModel.h" />
+    <QtMoc Include="ToolBoxLabel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

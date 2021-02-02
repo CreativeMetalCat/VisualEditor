@@ -17,4 +17,9 @@ private:
 
     QVBoxLayout* VerticalLayout;
     QWidget* scrollWidget;
+
+    QWidget* toolBoxScrollWidget;
+    QVBoxLayout* toolBoxScrollVertialLayout;
+
+    JSONObjectWidget* fileObject;
 };

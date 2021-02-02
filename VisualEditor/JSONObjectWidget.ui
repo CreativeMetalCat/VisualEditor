@@ -13,9 +13,15 @@
   <property name="windowTitle">
    <string>JSONObjectWidget</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
+   <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox">
+     <property name="acceptDrops">
+      <bool>true</bool>
+     </property>
      <property name="title">
       <string>GroupBox</string>
      </property>
@@ -24,6 +30,9 @@
      </property>
      <property name="checkable">
       <bool>false</bool>
+     </property>
+     <property name="AllowNameChange" stdset="0">
+      <bool>true</bool>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="1" column="0">
@@ -38,9 +47,6 @@
       </item>
      </layout>
     </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLineEdit" name="lineEdit"/>
    </item>
   </layout>
  </widget>

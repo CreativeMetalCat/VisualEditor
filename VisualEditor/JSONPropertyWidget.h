@@ -13,6 +13,8 @@ public:
 	~JSONPropertyWidget();
 
 	virtual QJsonValue GenerateJsonValue() override;
+
+	
 private:
 	Ui::JSONPropertyWidget ui;
 
