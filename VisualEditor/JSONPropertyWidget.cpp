@@ -1,4 +1,5 @@
 #include "JSONPropertyWidget.h"
+#include "PropertyEditor.h"
 
 JSONPropertyWidget::JSONPropertyWidget(QWidget *parent, QString name, QJsonValue value)
 	: JSONWidgetBase(parent,name)
@@ -77,6 +78,32 @@ QJsonValue JSONPropertyWidget::GenerateJsonValue()
 	default:
 		return QJsonValue();
 	}
+}
+
+void JSONPropertyWidget::contextMenuEvent(QContextMenuEvent*event)
+{
+	if (!VisualEditorGlobals::IsAnyPropertyBeingEdited)
+	{
+		//open a property editor window
+		//parent()->parent() = First parent() is the object window, second parent() is actual parent of the object window
+		if (JSONWidgetBase* obj = qobject_cast<JSONWidgetBase*>(parent()->parent()))
+		{
+			PropertyEditor* propEdit = new PropertyEditor(this, this);
+
+			connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, &JSONWidgetBase::ChangeChildId);
+
+			connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONWidgetBase::DeleteChild);
+
+			propEdit->showNormal();
+
+			VisualEditorGlobals::IsAnyPropertyBeingEdited = true;
+		}
+	}
+}
+
+void JSONPropertyWidget::OnIdSpinBoxValueChanged(int newId)
+{
+	 ChangeChildId(newId);
 }
 
 

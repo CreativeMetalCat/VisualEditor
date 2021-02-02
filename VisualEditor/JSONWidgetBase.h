@@ -28,6 +28,11 @@ protected:
 	//Type of the object that will be used in json file generation
 	QJsonValue::Type Type = QJsonValue::Type::Undefined;
 
+public slots:
+	virtual void ChangeChildId(int newId){}
+
+	virtual void DeleteChild() {}
+
 private:
 	Ui::JSONWidgetBase ui;
 };

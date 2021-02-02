@@ -159,9 +159,13 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 			{
 				PropertyEditor* propEdit = new PropertyEditor(this, this);				
 
-				connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, &JSONObjectWidget::ChangeChildId);
+				//connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, &JSONObjectWidget::OnIdSpinBoxValueChanged);
 
-				connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONObjectWidget::DeleteChild);
+				//connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONObjectWidget::OnDeleteButtonPressed);
+
+				connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, &JSONWidgetBase::ChangeChildId);
+
+				connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONWidgetBase::DeleteChild);
 
 				propEdit->showNormal();
 
@@ -219,4 +223,9 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 JSONObjectWidget::~JSONObjectWidget()
 {
 	delete ui;
+}
+
+bool eventFilter(QObject* object, QEvent* event)
+{
+	return false;
 }

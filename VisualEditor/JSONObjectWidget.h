@@ -27,19 +27,32 @@ public:
 	/// <param name="value">data to load from</param>
 	void AddNewProperty(QString name,QJsonValue value);
 
+public:
+	/// <summary>
+	/// Changes child id
+	/// </summary>
+	/// <param name="newId"></param>
+	virtual void ChangeChildId(int newId)override;
+
+	/// <summary>
+	/// Removes child told by PropertyEditor
+	/// </summary>
+	virtual void DeleteChild()override;
+
+
 private slots:
 	/// <summary>
 	/// Changes child id
 	/// </summary>
 	/// <param name="newId"></param>
-	void ChangeChildId(int newId); 
+	void OnIdSpinBoxValueChanged(int newId) { ChangeChildId(newId); }
 
 	/// <summary>
 	/// Removes child told by PropertyEditor
 	/// </summary>
-	void DeleteChild();
+	void OnDeleteButtonPressed() { DeleteChild(); }
 private:
 	Ui::JSONObjectWidget *ui;
 
-	bool eventFilter(QObject* object, QEvent* event);
+	virtual bool eventFilter(QObject* object, QEvent* event)override;
 };

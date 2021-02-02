@@ -38,7 +38,7 @@
         <string/>
        </property>
        <property name="placeholderText">
-        <string>Text</string>
+        <string>Null</string>
        </property>
        <property name="modelColumn">
         <number>0</number>

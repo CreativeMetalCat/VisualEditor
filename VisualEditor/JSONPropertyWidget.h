@@ -14,10 +14,21 @@ public:
 
 	virtual QJsonValue GenerateJsonValue() override;
 
-	
+protected:
+	virtual void contextMenuEvent(QContextMenuEvent*)override;
 private:
 	Ui::JSONPropertyWidget ui;
-
 private slots:
 	void OnTypeSelectionChanged(QString selection);
+
+	/// <summary>
+	/// Changes child id
+	/// </summary>
+	/// <param name="newId"></param>
+	void OnIdSpinBoxValueChanged(int newId);
+
+	/// <summary>
+	/// Removes child told by PropertyEditor
+	/// </summary>
+	void OnDeleteButtonPressed() { DeleteChild(); }
 };
