@@ -41,8 +41,19 @@ public:
 	virtual void DeleteChild()override;
 
 	bool IsArray = false;
-
+	/// <summary>
+	/// Returns the "main" object - the file object that contains the whole thing
+	/// </summary>
+	/// <param name="start"></param>
+	/// <returns></returns>
 	JSONObjectWidget* GetFileObject(JSONObjectWidget*start = Q_NULLPTR);
+
+	/// <summary>
+	/// Returns list of all of the children(and their children) in one list
+	/// This function is VERY inefficient, so try not to call it often
+	/// </summary>
+	/// <returns>list of all of the children(and their children) in one list</returns>
+	QVector<JSONWidgetBase*> GetListOfAllJsonWidgets();
 
 private slots:
 	/// <summary>

@@ -207,6 +207,7 @@ void JSONObjectWidget::DeleteChild()
 JSONObjectWidget* JSONObjectWidget::GetFileObject(JSONObjectWidget* start)
 {
 	//parent is still JSON object so we ask it to get parent for us
+	//first parent will always be groupBox and parent of that is the actual object
 	if (JSONObjectWidget * parentObj = qobject_cast<JSONObjectWidget*>((start? start->parent(): parent())->parent()))
 	{
 		return  parentObj->GetFileObject();
@@ -218,21 +219,44 @@ JSONObjectWidget* JSONObjectWidget::GetFileObject(JSONObjectWidget* start)
 	}
 }
 
+QVector<JSONWidgetBase*> JSONObjectWidget::GetListOfAllJsonWidgets()
+{
+	if (!ChildObjects.empty())
+	{
+		QVector<JSONWidgetBase*> result = QVector<JSONWidgetBase*>();
+		result.append(this);
+		for (auto it = ChildObjects.begin(); it != ChildObjects.end(); ++it)
+		{
+			if (JSONObjectWidget* obj = qobject_cast<JSONObjectWidget*>((*it)))
+			{
+				result.append(obj->GetListOfAllJsonWidgets());
+			}
+			else
+			{
+				result.append((*it));
+			}		
+		}
+		return result;
+	}
+	return QVector<JSONWidgetBase*>();
+}
+
 bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 {
 	if (object == ui->groupBox )
 	{
 		if (event->type() == QEvent::MouseButtonPress && ui->groupBox->property("AllowNameChange").toBool())
 		{
-			qWarning() << GetFileObject()->Name;
 			QDrag* drag = new QDrag(this);
 			QMimeData* mimeData = new QMimeData;
 
-			mimeData->setData("veeditor/movedObject", QString("0").toUtf8());
+			mimeData->setData("veeditor/movedObject", QString::number(GetFileObject()->GetListOfAllJsonWidgets().indexOf(this, 0)).toUtf8());
 
 			drag->setMimeData(mimeData);
 
 			Qt::DropAction dropAction = drag->exec();
+
+			event->accept();
 		}
 		else if (event->type() == QEvent::ContextMenu && !VisualEditorGlobals::IsAnyPropertyBeingEdited)
 		{
@@ -307,6 +331,15 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 			if (drop->mimeData()->hasFormat("veeditor/movedObject"))
 			{
 				qWarning() << QString::fromUtf8(drop->mimeData()->data("veeditor/movedObject")).toInt();
+
+				auto child  = GetFileObject()->GetListOfAllJsonWidgets().at(QString::fromUtf8(drop->mimeData()->data("veeditor/movedObject")).toInt());
+				if (JSONObjectWidget* obj = qobject_cast<JSONObjectWidget*>(child->parent()))
+				{
+					obj->ChildObjects.removeOne(obj);
+				}
+
+				child->setParent(this);
+				ChildObjects.append(child);
 			}
 			return true;
 		}
