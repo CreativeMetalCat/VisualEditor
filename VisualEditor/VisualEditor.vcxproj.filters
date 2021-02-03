@@ -59,6 +59,9 @@
     <ClCompile Include="globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FileTab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="JSONObjectWidget.h">
@@ -76,6 +79,9 @@
     <QtMoc Include="PropertyEditor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="FileTab.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="JSONObjectWidget.ui">
@@ -88,6 +94,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="PropertyEditor.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="FileTab.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

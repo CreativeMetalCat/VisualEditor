@@ -87,12 +87,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="VisualEditor.qrc" />
+    <QtUic Include="FileTab.ui" />
     <QtUic Include="JSONObjectWidget.ui" />
     <QtUic Include="JSONPropertyWidget.ui" />
     <QtUic Include="JSONWidgetBase.ui" />
     <QtUic Include="PropertyEditor.ui" />
     <QtUic Include="VisualEditor.ui" />
     <QtMoc Include="VisualEditor.h" />
+    <ClCompile Include="FileTab.cpp" />
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="JSONObjectWidget.cpp" />
     <ClCompile Include="JSONPropertyWidget.cpp" />
@@ -116,6 +118,7 @@
     <QtMoc Include="ToolBoxLabel.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="FileTab.h" />
     <ClInclude Include="globals.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -2,8 +2,9 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QVBoxLayout>
-#include "JSONObjectWidget.h"
 #include "ui_VisualEditor.h"
+#include "FileTab.h"
+
 
 class VisualEditor : public QMainWindow
 {
@@ -14,13 +15,12 @@ public:
 private:
     Ui::VisualEditorClass ui;
 
-    QVBoxLayout* VerticalLayout;
-    QWidget* scrollWidget;
+    QVector<FileTabWidget*> TabsWidgets = QVector<FileTabWidget*>();
 
     QWidget* toolBoxScrollWidget;
     QVBoxLayout* toolBoxScrollVertialLayout;
-
-    JSONObjectWidget* fileObject;
 private slots:
     void SaveCurrentFile();
+
+    void OpenNewFile();
 };

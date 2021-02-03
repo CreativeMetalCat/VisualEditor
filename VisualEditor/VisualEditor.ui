@@ -25,20 +25,22 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="widgetResizable">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+      <property name="documentMode">
        <bool>true</bool>
       </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>781</width>
-         <height>654</height>
-        </rect>
-       </property>
-      </widget>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
      </widget>
     </item>
    </layout>
@@ -67,6 +69,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionOpen_2"/>
     <addaction name="actionSave_File"/>
    </widget>
    <addaction name="menuFile"/>
@@ -84,6 +87,11 @@
   <action name="actionSave_File">
    <property name="text">
     <string>Save</string>
+   </property>
+  </action>
+  <action name="actionOpen_2">
+   <property name="text">
+    <string>Open</string>
    </property>
   </action>
  </widget>

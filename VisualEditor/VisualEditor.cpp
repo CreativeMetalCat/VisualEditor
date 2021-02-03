@@ -5,34 +5,14 @@
 #include "JSONObjectWidget.h"
 #include "JSONPropertyWidget.h"
 #include <QListView>
+#include <QFileDialog>
+#include <QStandardPaths>
 #include "ToolBoxLabel.h"
 
 VisualEditor::VisualEditor(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-
-    scrollWidget = new QWidget(this);
-    VerticalLayout = new QVBoxLayout(scrollWidget);
-    ui.scrollArea->setWidget(scrollWidget);
-
-    QFile file("json/test.json");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QMessageBox::warning(this, "Warinig!", "Failed to open file!", QMessageBox::Ok, QMessageBox::Ok);
-    }
-    QString val;
-    val = file.readAll();
-    file.close();
-
-    //load document and create JSON object to work with
-    QJsonDocument document = QJsonDocument::fromJson(val.toUtf8());
-    QJsonObject docObject = document.object();
-
-    QStringList keys = docObject.keys();
-
-    fileObject = new JSONObjectWidget(docObject, this, "file",false);
-    VerticalLayout->addWidget(fileObject);
 
     toolBoxScrollWidget = new QWidget(this);
     toolBoxScrollVertialLayout = new QVBoxLayout(toolBoxScrollWidget);
@@ -46,18 +26,29 @@ VisualEditor::VisualEditor(QWidget *parent)
     toolBoxScrollVertialLayout->addWidget(objectButton);
 
     connect(ui.actionSave_File, &QAction::triggered, this, &VisualEditor::SaveCurrentFile);
+
+    connect(ui.actionOpen_2, &QAction::triggered, this, &VisualEditor::OpenNewFile);
 }
 
 void VisualEditor::SaveCurrentFile()
 {
-    QFile file("json/test.json");
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
+    if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
     {
-        QMessageBox::warning(this, "Warinig!", "Failed to open file!", QMessageBox::Ok, QMessageBox::Ok);
+        QFile file(tab->FilePath);
+        if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
+        {
+            QMessageBox::warning(this, "Warinig!", "Failed to open file!", QMessageBox::Ok, QMessageBox::Ok);
+        }
+
+        //Create and save file
+        QJsonDocument boardDocument(tab->fileObject->GenerateJsonValue().toObject());
+        file.write(boardDocument.toJson());
     }
+}
 
-    //Create and save file
-    QJsonDocument boardDocument(fileObject->GenerateJsonValue().toObject());
-    file.write(boardDocument.toJson());
-
+void VisualEditor::OpenNewFile()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Select JSON file", QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), ("Json Files (*.json *.bowerrc *jscsrc *webmanifest *js.map *css.map *ts.map *har *jslintrc *jsonId);;Any (*.*)"));
+    FileTabWidget* newTab = new FileTabWidget(fileName, this);
+    ui.tabWidget->addTab(newTab, newTab->FilePath);
 }
