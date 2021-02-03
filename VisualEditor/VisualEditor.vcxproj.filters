@@ -27,9 +27,6 @@
     <QtRcc Include="VisualEditor.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtUic Include="VisualEditor.ui">
-      <Filter>Resource Files</Filter>
-    </QtUic>
     <QtMoc Include="VisualEditor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -97,6 +94,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="FileTab.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="VisualEditor.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

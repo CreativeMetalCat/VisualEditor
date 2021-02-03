@@ -20,6 +20,8 @@ public:
 	QPushButton* GetDeleteButton();
 
 	QCheckBox* GetIsArrayCheckBox();
+
+	QLineEdit* GetNameEdit();
 	
 	JSONWidgetBase* WidgetToEdit = nullptr;
 private:

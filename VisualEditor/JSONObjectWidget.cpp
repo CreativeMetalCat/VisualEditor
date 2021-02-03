@@ -209,19 +209,6 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 	{
 		if (event->type() == QEvent::MouseButtonPress && ui->groupBox->property("AllowNameChange").toBool())
 		{
-			QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-			if (mouseEvent->button() == Qt::LeftButton)
-			{
-				bool ok = false;
-				QString newTitle = QInputDialog::getText(this, "Enter new name", "", QLineEdit::Normal, Name, &ok);
-				if (newTitle != "" && ok)
-				{
-					ui->groupBox->setTitle(newTitle + QString(IsArray ? "[]" : ""));
-					Name = newTitle;
-				}
-				mouseEvent->accept();
-				return true;
-			}
 		}
 		else if (event->type() == QEvent::ContextMenu && !VisualEditorGlobals::IsAnyPropertyBeingEdited)
 		{
@@ -236,6 +223,10 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONWidgetBase::DeleteChild);
 
 				connect(propEdit->GetIsArrayCheckBox(), &QCheckBox::stateChanged, this, &JSONObjectWidget::OnIsArrayChanged);
+
+				connect(propEdit->GetNameEdit(), &QLineEdit::textChanged, this, &JSONObjectWidget::OnNameChanged);
+
+				propEdit->GetNameEdit()->setText(Name);
 
 				propEdit->showNormal();
 
@@ -296,6 +287,14 @@ void JSONObjectWidget::OnIsArrayChanged(bool newState)
 	ui->groupBox->setTitle(Name + QString(IsArray ? "[ ]" : ""));
 }
 
+void JSONObjectWidget::OnNameChanged(QString newName)
+{
+	if (newName != "" )
+	{
+		ui->groupBox->setTitle(newName + QString(IsArray ? "[]" : ""));
+		Name = newName;
+	}
+}
 
 JSONObjectWidget::~JSONObjectWidget()
 {

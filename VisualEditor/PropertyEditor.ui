@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>370</width>
-    <height>96</height>
+    <height>167</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,20 +20,37 @@
    <string>PropertyEditor</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+   <item row="3" column="0">
     <widget class="QSpinBox" name="spinBox"/>
    </item>
-   <item row="2" column="0">
+   <item row="1" column="0">
+    <widget class="QLineEdit" name="lineEdit"/>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
     <widget class="QPushButton" name="pushButton">
      <property name="text">
       <string>Delete</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="4" column="0">
     <widget class="QCheckBox" name="isArrayCheckBox">
      <property name="text">
       <string>IsArray</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Id In Parent</string>
      </property>
     </widget>
    </item>

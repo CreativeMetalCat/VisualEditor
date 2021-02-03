@@ -22,4 +22,6 @@ private:
 	QWidget* scrollWidget;
 public:
 	JSONObjectWidget* fileObject;
+
+	QVector<JSONWidgetBase*> JSONWidgets = QVector<JSONWidgetBase*>();
 };

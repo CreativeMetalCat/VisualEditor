@@ -55,6 +55,8 @@ private slots:
 	void OnDeleteButtonPressed() { DeleteChild(); }
 
 	void OnIsArrayChanged(bool newState);
+
+	void OnNameChanged(QString newName);
 private:
 	Ui::JSONObjectWidget *ui;
 

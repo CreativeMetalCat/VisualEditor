@@ -17,6 +17,9 @@ PropertyEditor::PropertyEditor(JSONWidgetBase* widgetToEdit, QWidget *parent)
 		if (qobject_cast<JSONPropertyWidget*>(WidgetToEdit))
 		{
 			ui.isArrayCheckBox->setEnabled(false);
+
+			ui.lineEdit->setVisible(false);
+			ui.label->setVisible(false);
 		}
 		else
 		{
@@ -51,4 +54,9 @@ QPushButton* PropertyEditor::GetDeleteButton()
 QCheckBox* PropertyEditor::GetIsArrayCheckBox()
 {
 	return ui.isArrayCheckBox;
+}
+
+QLineEdit* PropertyEditor::GetNameEdit()
+{
+	return ui.lineEdit;
 }
