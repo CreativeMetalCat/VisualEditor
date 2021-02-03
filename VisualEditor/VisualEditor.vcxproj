@@ -99,6 +99,7 @@
     <ClCompile Include="JSONObjectWidget.cpp" />
     <ClCompile Include="JSONPropertyWidget.cpp" />
     <ClCompile Include="JSONWidgetBase.cpp" />
+    <ClCompile Include="JSONWidgetManager.cpp" />
     <ClCompile Include="PropertyEditor.cpp" />
     <ClCompile Include="ToolBoxLabel.cpp" />
     <ClCompile Include="VisualEditor.cpp" />
@@ -118,6 +119,7 @@
     <QtMoc Include="ToolBoxLabel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="JSONWidgetManager.h" />
     <QtMoc Include="FileTab.h" />
     <ClInclude Include="globals.h" />
   </ItemGroup>

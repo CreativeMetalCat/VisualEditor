@@ -8,6 +8,7 @@
 #include <QMimeData>
 #include "PropertyEditor.h"
 #include <QJsonArray>
+#include <QDrag>
 
 JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QString name, bool AllowNameChange,bool isArray)
 	: JSONWidgetBase(parent,name),IsArray(isArray)
@@ -203,12 +204,35 @@ void JSONObjectWidget::DeleteChild()
 	}
 }
 
+JSONObjectWidget* JSONObjectWidget::GetFileObject(JSONObjectWidget* start)
+{
+	//parent is still JSON object so we ask it to get parent for us
+	if (JSONObjectWidget * parentObj = qobject_cast<JSONObjectWidget*>((start? start->parent(): parent())->parent()))
+	{
+		return  parentObj->GetFileObject();
+	}
+	//if parent is not a json object we found the "file" core
+	else
+	{
+		return this;
+	}
+}
+
 bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 {
 	if (object == ui->groupBox )
 	{
 		if (event->type() == QEvent::MouseButtonPress && ui->groupBox->property("AllowNameChange").toBool())
 		{
+			qWarning() << GetFileObject()->Name;
+			QDrag* drag = new QDrag(this);
+			QMimeData* mimeData = new QMimeData;
+
+			mimeData->setData("veeditor/movedObject", QString("0").toUtf8());
+
+			drag->setMimeData(mimeData);
+
+			Qt::DropAction dropAction = drag->exec();
 		}
 		else if (event->type() == QEvent::ContextMenu && !VisualEditorGlobals::IsAnyPropertyBeingEdited)
 		{
@@ -246,6 +270,11 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				dragEvent->acceptProposedAction();
 				return true;
 			}
+			if (dragEvent->mimeData()->hasFormat("veeditor/movedObject"))
+			{
+				dragEvent->acceptProposedAction();
+				return true;
+			}
 			
 		}
 		else if (event->type() == QEvent::Drop)
@@ -274,6 +303,10 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 					obj->Id = ChildObjects.count();
 					ChildObjects.append(obj);
 				}
+			}
+			if (drop->mimeData()->hasFormat("veeditor/movedObject"))
+			{
+				qWarning() << QString::fromUtf8(drop->mimeData()->data("veeditor/movedObject")).toInt();
 			}
 			return true;
 		}

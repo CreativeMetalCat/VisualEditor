@@ -59,6 +59,9 @@
     <ClCompile Include="FileTab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JSONWidgetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="JSONObjectWidget.h">
@@ -102,6 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JSONWidgetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -42,6 +42,8 @@ public:
 
 	bool IsArray = false;
 
+	JSONObjectWidget* GetFileObject(JSONObjectWidget*start = Q_NULLPTR);
+
 private slots:
 	/// <summary>
 	/// Changes child id

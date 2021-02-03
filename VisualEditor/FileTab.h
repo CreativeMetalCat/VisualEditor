@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "ui_FileTab.h"
-
+#include "JSONWidgetManager.h"
 #include "JSONObjectWidget.h"
 
 class FileTabWidget : public QWidget
@@ -23,5 +23,5 @@ private:
 public:
 	JSONObjectWidget* fileObject;
 
-	QVector<JSONWidgetBase*> JSONWidgets = QVector<JSONWidgetBase*>();
+	JSONWidgetManager* widgets;
 };

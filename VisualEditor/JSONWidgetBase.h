@@ -6,7 +6,6 @@
 #include "ui_JSONWidgetBase.h"
 #include "globals.h"
 
-
 class JSONWidgetBase : public QWidget
 {
 	Q_OBJECT

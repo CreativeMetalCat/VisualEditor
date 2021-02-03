@@ -20,6 +20,7 @@ FileTabWidget::FileTabWidget(QString filePath, QWidget *parent)
     {
         QMessageBox::warning(this, "Warinig!", "Failed to open file!", QMessageBox::Ok, QMessageBox::Ok);
     }
+
     QString val;
     val = file.readAll();
     file.close();
