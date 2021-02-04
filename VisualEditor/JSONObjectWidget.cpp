@@ -181,19 +181,9 @@ void JSONObjectWidget::ChangeChildId(int newId)
 			//check if widget is part of current widgets
 			if (ChildObjects.contains(editor->WidgetToEdit))
 			{
-				int currentId = 0;
-
 				ChildObjects.move(ChildObjects.indexOf(editor->WidgetToEdit, 0), newId);
 
-				for (auto it = ChildObjects.begin(); it != ChildObjects.end(); ++it)
-				{				
-					(*it)->Id = currentId;
-					currentId++;
-
-					//readd widget to reset positions
-					ui->verticalLayoutBox->removeWidget(*it);	
-					ui->verticalLayoutBox->addWidget(*it);
-				}
+				ShakeChildren();
 			}
 		}
 		else
@@ -268,6 +258,23 @@ QVector<JSONWidgetBase*> JSONObjectWidget::GetListOfAllJsonWidgets()
 	return result;
 }
 
+void JSONObjectWidget::ShakeChildren()
+{
+	if (!ChildObjects.isEmpty())
+	{
+		int currentId = 0;
+		for (auto it = ChildObjects.begin(); it != ChildObjects.end(); ++it)
+		{
+			(*it)->Id = currentId;
+			currentId++;
+
+			//readd widget to reset positions
+			ui->verticalLayoutBox->removeWidget(*it);
+			ui->verticalLayoutBox->addWidget(*it);
+		}
+	}
+}
+
 bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 {
 	if (object == ui->groupBox)
@@ -277,7 +284,6 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 			//we drag with left button
 			if (static_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && !VisualEditorGlobals::IsAnyObjectBeingMoved)
 			{
-				auto testList = GetFileObject()->GetListOfAllJsonWidgets();
 				//record id to reduce calls
 				const int id = GetFileObject()->GetListOfAllJsonWidgets().indexOf(this, 0);
 				//if id was not found - no point in dragging this object
@@ -378,7 +384,8 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 					{
 						if (JSONObjectWidget* obj = qobject_cast<JSONObjectWidget*>(child->parent()->parent()))
 						{
-							obj->ChildObjects.removeOne(obj);
+							obj->ChildObjects.removeOne(child);
+							obj->ShakeChildren();
 						}
 						else
 						{
@@ -387,11 +394,12 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 
 						child->setParent(this);
 						ChildObjects.append(child);
+						ShakeChildren();
 					}
 				}
 				else
 				{
-					qWarning() << "Error: Invalid inxed : " + QString::number(index) + " in " + objectName() + " Array size: " + QString::number(list.count());
+					qWarning() << "Error: Invalid index : " + QString::number(index) + " in " + objectName() + " Array size: " + QString::number(list.count());
 					return true;
 				}
 			}

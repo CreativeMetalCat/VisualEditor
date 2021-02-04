@@ -2,7 +2,6 @@
 
 #include <QWidget>
 #include "ui_FileTab.h"
-#include "JSONWidgetManager.h"
 #include "JSONObjectWidget.h"
 
 class FileTabWidget : public QWidget
@@ -22,6 +21,4 @@ private:
 	QWidget* scrollWidget;
 public:
 	JSONObjectWidget* fileObject;
-
-	JSONWidgetManager* widgets;
 };

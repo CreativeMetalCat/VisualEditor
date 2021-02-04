@@ -55,6 +55,11 @@ public:
 	/// <returns>list of all of the children(and their children) in one list</returns>
 	QVector<JSONWidgetBase*> GetListOfAllJsonWidgets();
 
+	/// <summary>
+	/// "Shakes" chilren to correctly display items after adding/removing a child
+	/// </summary>
+	void ShakeChildren();
+
 private slots:
 	/// <summary>
 	/// Changes child id

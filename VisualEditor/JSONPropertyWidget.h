@@ -16,6 +16,10 @@ public:
 
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent*)override;
+
+	virtual void mousePressEvent(QMouseEvent*)override;
+
+	virtual void mouseReleaseEvent(QMouseEvent*)override;
 private:
 	Ui::JSONPropertyWidget ui;
 private slots:

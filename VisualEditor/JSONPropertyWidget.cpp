@@ -1,5 +1,9 @@
 #include "JSONPropertyWidget.h"
 #include "PropertyEditor.h"
+#include "JSONObjectWidget.h"
+#include <QDrag>
+#include <QMimeData>
+#include <QMouseEvent>
 
 JSONPropertyWidget::JSONPropertyWidget(QWidget *parent, QString name, QJsonValue value)
 	: JSONWidgetBase(parent,name)
@@ -100,6 +104,46 @@ void JSONPropertyWidget::contextMenuEvent(QContextMenuEvent*event)
 			VisualEditorGlobals::IsAnyPropertyBeingEdited = true;
 		}
 	}
+}
+
+void JSONPropertyWidget::mousePressEvent(QMouseEvent*event)
+{
+	//start drag if we touched this with mouse
+	if (!VisualEditorGlobals::IsAnyObjectBeingMoved)
+	{
+		//by design every property is child of at least one object -> root object
+		//but the first parent() would return groupBox
+		if (JSONObjectWidget* parentObj = qobject_cast<JSONObjectWidget*>(parent()->parent()))
+		{
+			//record id to reduce calls
+			const int id = parentObj->GetFileObject()->GetListOfAllJsonWidgets().indexOf(this, 0);
+			//if id was not found - no point in dragging this object
+			if (id > 0)
+			{
+
+				QDrag* drag = new QDrag(this);
+				QMimeData* mimeData = new QMimeData;
+
+				//"veeditor/movedObject" is type existing just for this app
+				mimeData->setData("veeditor/movedObject", QString::number(id).toUtf8());
+
+				drag->setMimeData(mimeData);
+
+				Qt::DropAction dropAction = drag->exec();
+
+				//technically this should be preventing mouse grabbing the whole tree, but for whatever reason even keeps going deeper into the tree
+				event->accept();
+
+				//to prevent grabbing the whole tree when dragging
+				VisualEditorGlobals::IsAnyObjectBeingMoved = true;
+			}
+		}
+	}
+}
+
+void JSONPropertyWidget::mouseReleaseEvent(QMouseEvent*)
+{
+	VisualEditorGlobals::IsAnyObjectBeingMoved = false;
 }
 
 void JSONPropertyWidget::OnIdSpinBoxValueChanged(int newId)
