@@ -28,6 +28,9 @@ public:
 	//index of the item in parent's array
 	int Id = -1;
 
+	
+	virtual void mouseReleaseEvent(QMouseEvent*)override;
+
 protected:
 	//Type of the object that will be used in json file generation
 	QJsonValue::Type Type = QJsonValue::Type::Undefined;

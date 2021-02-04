@@ -17,3 +17,8 @@ QJsonValue JSONWidgetBase::GenerateJsonValue()
 	//because it is a base of the bases - there is nothing to return
 	return QJsonObject();
 }
+
+void JSONWidgetBase::mouseReleaseEvent(QMouseEvent*)
+{
+	VisualEditorGlobals::IsAnyObjectBeingMoved = false;
+}
