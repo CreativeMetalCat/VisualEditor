@@ -61,20 +61,6 @@ public:
 	void ShakeChildren();
 
 private slots:
-	/// <summary>
-	/// Changes child id
-	/// </summary>
-	/// <param name="newId"></param>
-	void OnIdSpinBoxValueChanged(int newId) { ChangeChildId(newId); }
-
-	/// <summary>
-	/// Removes child told by PropertyEditor
-	/// </summary>
-	void OnDeleteButtonPressed() { DeleteChild(); }
-
-	void OnIsArrayChanged(bool newState);
-
-	void OnNameChanged(QString newName);
 
 	/// <summary>
 	/// Creates new prefab file in Documents/Prefabs/

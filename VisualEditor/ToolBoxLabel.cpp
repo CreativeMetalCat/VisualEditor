@@ -29,6 +29,7 @@ void ToolBoxLabel::mousePressEvent(QMouseEvent* event)
         //we still tell that this is an object
         mimeData->setData("toolbox/object", ("Add new " + text()).toUtf8());
         //but we also tell that this is a custom object
+        //and write the customObject data
         mimeData->setData("toolbox/customObjectInfo", QString(JsonPrefabString).toUtf8());
         break;
     default:

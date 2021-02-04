@@ -320,13 +320,24 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				//create new window and setup it's events
 				PropertyEditor* propEdit = new PropertyEditor(this, this);
 
-				connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, &JSONWidgetBase::ChangeChildId);
+				connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, [this](int newId) {ChangeChildId(newId); });
 
-				connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONWidgetBase::DeleteChild);
+				connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, [this]() { DeleteChild(); });
 
-				connect(propEdit->GetIsArrayCheckBox(), &QCheckBox::stateChanged, this, &JSONObjectWidget::OnIsArrayChanged);
+				connect(propEdit->GetIsArrayCheckBox(), &QCheckBox::stateChanged, this, [this](bool newState)
+				{
+					IsArray = newState;
+					ui->groupBox->setTitle(Name + QString(IsArray ? "[ ]" : ""));
+				});
 
-				connect(propEdit->GetNameEdit(), &QLineEdit::textChanged, this, &JSONObjectWidget::OnNameChanged);
+				connect(propEdit->GetNameEdit(), &QLineEdit::textChanged, this, [this](QString newName)
+				{
+					if (newName != "")
+					{
+						ui->groupBox->setTitle(newName + QString(IsArray ? "[]" : ""));
+						Name = newName;
+					}
+				});
 
 				//the reason why it doesn't use getter function -> i got tired of creating them and they don't benefit anyone
 				connect(propEdit->ui.button_createPrefab, &QPushButton::pressed, this, &JSONObjectWidget::CreatePrefab);
@@ -368,6 +379,7 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 			//create new empty object
 			if (drop->mimeData()->hasFormat("toolbox/object"))
 			{
+				//generate empty json object to add 
 				QJsonObject jsonObj = QJsonObject();
 				if (drop->mimeData()->hasFormat("toolbox/customObjectInfo"))
 				{
@@ -379,6 +391,7 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				JSONObjectWidget* obj = new JSONObjectWidget(jsonObj, this);
 				ui->verticalLayoutBox->addWidget(obj);
 
+				//because we add it in the end we simply set it to (last index + 1), which would basicaly become next last index
 				obj->Id = ChildObjects.count();
 				ChildObjects.append(obj);
 			}
@@ -420,21 +433,6 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 		}
 	}
 	return false;
-}
-
-void JSONObjectWidget::OnIsArrayChanged(bool newState)
-{
-	IsArray = newState;
-	ui->groupBox->setTitle(Name + QString(IsArray ? "[ ]" : ""));
-}
-
-void JSONObjectWidget::OnNameChanged(QString newName)
-{
-	if (newName != "" )
-	{
-		ui->groupBox->setTitle(newName + QString(IsArray ? "[]" : ""));
-		Name = newName;
-	}
 }
 
 void JSONObjectWidget::CreatePrefab()

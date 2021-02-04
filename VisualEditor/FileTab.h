@@ -14,6 +14,9 @@ public:
 
 
 	QString FilePath;
+
+private slots:
+
 private:
 	Ui::FileTab ui;
 
