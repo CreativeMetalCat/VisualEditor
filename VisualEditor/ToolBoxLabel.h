@@ -17,11 +17,15 @@ public:
         CustomObject
     };
 
-    ToolBoxLabel(QWidget* parent = Q_NULLPTR,Type type = Type::Property);
-    ToolBoxLabel(QString text,QWidget* parent = Q_NULLPTR, Type type = Type::Property);
+    ToolBoxLabel(QString jsonPrefabString = "\"prefab\":{}", QWidget* parent = Q_NULLPTR,Type type = Type::Property);
+    ToolBoxLabel(QString text, QString jsonPrefabString = "\"prefab\":{}", QWidget* parent = Q_NULLPTR, Type type = Type::Property);
     ~ToolBoxLabel();
 
     Type ItemType = Type::Property;
+
+    bool IsPrefab = false;
+
+    QString JsonPrefabString;
 protected:
     virtual void mousePressEvent(QMouseEvent* event)override;
 

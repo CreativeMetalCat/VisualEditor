@@ -75,6 +75,11 @@ private slots:
 	void OnIsArrayChanged(bool newState);
 
 	void OnNameChanged(QString newName);
+
+	/// <summary>
+	/// Creates new prefab file in Documents/Prefabs/
+	/// </summary>
+	void CreatePrefab();
 private:
 	Ui::JSONObjectWidget *ui;
 

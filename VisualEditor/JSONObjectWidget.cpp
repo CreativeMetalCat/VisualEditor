@@ -9,6 +9,10 @@
 #include "PropertyEditor.h"
 #include <QJsonArray>
 #include <QDrag>
+#include <QStandardPaths>
+#include <QDir>
+#include <QMessageBox>
+#include <QJsonDocument>
 
 JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QString name, bool AllowNameChange,bool isArray)
 	: JSONWidgetBase(parent,name),IsArray(isArray)
@@ -324,6 +328,9 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 
 				connect(propEdit->GetNameEdit(), &QLineEdit::textChanged, this, &JSONObjectWidget::OnNameChanged);
 
+				//the reason why it doesn't use getter function -> i got tired of creating them and they don't benefit anyone
+				connect(propEdit->ui.button_createPrefab, &QPushButton::pressed, this, &JSONObjectWidget::CreatePrefab);
+
 				propEdit->GetNameEdit()->setText(Name);
 
 				propEdit->showNormal();
@@ -338,6 +345,7 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 			//it it's types used by this app-> accept them
 			if (dragEvent->mimeData()->hasFormat("toolbox/property")
 				|| dragEvent->mimeData()->hasFormat("toolbox/object") 
+				|| dragEvent->mimeData()->hasFormat("toolbox/customObjectInfo")
 				|| dragEvent->mimeData()->hasFormat("veeditor/movedObject"))
 			{
 				dragEvent->acceptProposedAction();
@@ -348,6 +356,7 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 		else if (event->type() == QEvent::Drop)
 		{
 			QDropEvent* drop = static_cast<QDropEvent*>(event);
+			//create new empty property
 			if (drop->mimeData()->hasFormat("toolbox/property"))
 			{
 				//spawn new empty property
@@ -356,24 +365,27 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				prop->Id = ChildObjects.count();
 				ChildObjects.append(prop);
 			}
+			//create new empty object
 			if (drop->mimeData()->hasFormat("toolbox/object"))
 			{
+				QJsonObject jsonObj = QJsonObject();
 				if (drop->mimeData()->hasFormat("toolbox/customObjectInfo"))
 				{
-					qWarning() << QString::fromUtf8(drop->mimeData()->data("toolbox/customObjectInfo"));
+					//if it has custom data attached to it -> load it
+					QJsonDocument prefabDoc = QJsonDocument::fromJson((drop->mimeData()->data("toolbox/customObjectInfo")));
+					jsonObj = prefabDoc.object();
 				}
-				else
-				{
-					//spawn new empty object
-					JSONObjectWidget* obj = new JSONObjectWidget(QJsonObject(), this);
-					ui->verticalLayoutBox->addWidget(obj);
+				//otherwise we just fill it with empty data
+				JSONObjectWidget* obj = new JSONObjectWidget(jsonObj, this);
+				ui->verticalLayoutBox->addWidget(obj);
 
-					obj->Id = ChildObjects.count();
-					ChildObjects.append(obj);
-				}
+				obj->Id = ChildObjects.count();
+				ChildObjects.append(obj);
 			}
+			//reparent
 			if (drop->mimeData()->hasFormat("veeditor/movedObject"))
 			{
+				//generate id to avoid unnesseary calls
 				const int index = QString::fromUtf8(drop->mimeData()->data("veeditor/movedObject")).toInt();
 
 				const auto list = GetFileObject()->GetListOfAllJsonWidgets();
@@ -422,6 +434,42 @@ void JSONObjectWidget::OnNameChanged(QString newName)
 	{
 		ui->groupBox->setTitle(newName + QString(IsArray ? "[]" : ""));
 		Name = newName;
+	}
+}
+
+void JSONObjectWidget::CreatePrefab()
+{
+	//get name for new prefab
+	QString prefabName = QInputDialog::getText(this, "Create Name For Prefab", "Name:");
+
+	//we can not create files with no name
+	if (prefabName != "")
+	{
+		//Create prefab folder if it doesn't exists
+		if (!QDir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/JsonVisualEditorsPrefabs/").exists())
+		{
+			QDir().mkdir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/JsonVisualEditorsPrefabs/");
+		}
+		//.vep = Visual Editor Prefab
+		QFile file(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/JsonVisualEditorsPrefabs/"+ prefabName + ".vep");
+
+		if (!file.open(QIODevice::ReadWrite))
+		{
+			QMessageBox::critical(this, "Warning!", file.errorString(), QMessageBox::Ok);
+			return;
+		}
+
+		//Create and save file
+		QJsonObject docObj;
+		docObj[Name] = (GenerateJsonValue().toObject());
+		QJsonDocument prefabDocument(docObj);
+		file.write(prefabDocument.toJson());
+
+		file.close();
+	}
+	else
+	{
+		QMessageBox::critical(this, "Error!", "Empty Name is not allowed!", QMessageBox::Ok);
 	}
 }
 

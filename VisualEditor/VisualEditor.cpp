@@ -8,6 +8,11 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include "ToolBoxLabel.h"
+#include <QStringList>
+
+//Points to User/Documents/JsonVisualEditorsPrefabs
+//Should be considered: this could be a variable that can be changed in settings in the future
+#define PREFAB_DIRECTORY QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/JsonVisualEditorsPrefabs/"
 
 VisualEditor::VisualEditor(QWidget *parent)
     : QMainWindow(parent)
@@ -19,11 +24,40 @@ VisualEditor::VisualEditor(QWidget *parent)
     ui.ToolBox->setWidget(toolBoxScrollWidget);
 
     //add default buttons to tool box
-    ToolBoxLabel* propertyButton = new ToolBoxLabel("Property", this, ToolBoxLabel::Type::Property);
+    ToolBoxLabel* propertyButton = new ToolBoxLabel("Property","{}", this, ToolBoxLabel::Type::Property);
     toolBoxScrollVertialLayout->addWidget(propertyButton);
 
-    ToolBoxLabel* objectButton = new ToolBoxLabel("JsonObject", this, ToolBoxLabel::Type::Object);
+    ToolBoxLabel* objectButton = new ToolBoxLabel("JsonObject","{}", this, ToolBoxLabel::Type::Object);
     toolBoxScrollVertialLayout->addWidget(objectButton);
+  
+    if (QDir(PREFAB_DIRECTORY).exists())
+    {
+        QDir prefabDirectory(PREFAB_DIRECTORY);
+
+        QStringList files = prefabDirectory.entryList(QStringList() << "*.vep" << "*.VEP", QDir::Files);
+
+        if (!files.empty())
+        {
+            //iterate throgh the array and load any prefab that can be found
+            for (auto it = files.begin(); it != files.end(); ++it)
+            {
+                QFile file(PREFAB_DIRECTORY  + *it);
+                if (file.open(QFile::ReadOnly | QFile::Text))
+                {
+                    //read file and immediately close it to avoid any issues
+                    QString val = file.readAll();
+                    file.close();
+
+                    ToolBoxLabel* prefabButton = new ToolBoxLabel(*it, val, this, ToolBoxLabel::Type::CustomObject);
+                    toolBoxScrollVertialLayout->addWidget(prefabButton);
+                }
+                else
+                {
+                    qWarning() << "Failed to open prefab!: " + (*it);
+                }
+            }
+        }
+    }
 
     connect(ui.actionSave_File, &QAction::triggered, this, &VisualEditor::SaveCurrentFile);
 

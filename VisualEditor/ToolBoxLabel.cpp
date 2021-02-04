@@ -2,13 +2,9 @@
 #include <QDrag>
 #include <QMimeData>
 
-ToolBoxLabel::ToolBoxLabel(QWidget* parent, Type type) :QLabel("None", parent), ItemType(type) {}
+ToolBoxLabel::ToolBoxLabel(QString jsonPrefabString,QWidget* parent, Type type) :QLabel("None", parent), ItemType(type),JsonPrefabString(jsonPrefabString) {}
 
-ToolBoxLabel::ToolBoxLabel(QString text, QWidget* parent, Type type) : QLabel(text, parent), ItemType(type) {}
-
-ToolBoxLabel::~ToolBoxLabel()
-{
-}
+ToolBoxLabel::ToolBoxLabel(QString text, QString jsonPrefabString, QWidget* parent, Type type) : QLabel(text, parent),  JsonPrefabString(jsonPrefabString), ItemType(type) {}
 
 void ToolBoxLabel::mousePressEvent(QMouseEvent* event)
 {
@@ -33,7 +29,7 @@ void ToolBoxLabel::mousePressEvent(QMouseEvent* event)
         //we still tell that this is an object
         mimeData->setData("toolbox/object", ("Add new " + text()).toUtf8());
         //but we also tell that this is a custom object
-        mimeData->setData("toolbox/customObjectInfo", QString("{}").toUtf8()/*placeholder input, should be json string with layout*/);
+        mimeData->setData("toolbox/customObjectInfo", QString(JsonPrefabString).toUtf8());
         break;
     default:
         break;
@@ -45,5 +41,9 @@ void ToolBoxLabel::mousePressEvent(QMouseEvent* event)
 }
 
 void ToolBoxLabel::mouseReleaseEvent(QMouseEvent* event)
+{
+}
+
+ToolBoxLabel::~ToolBoxLabel()
 {
 }

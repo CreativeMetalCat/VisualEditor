@@ -24,7 +24,7 @@ public:
 	QLineEdit* GetNameEdit();
 	
 	JSONWidgetBase* WidgetToEdit = nullptr;
-private:
+public:
 	Ui::PropertyEditor ui;
 	
 };

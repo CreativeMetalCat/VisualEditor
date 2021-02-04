@@ -20,6 +20,7 @@ PropertyEditor::PropertyEditor(JSONWidgetBase* widgetToEdit, QWidget *parent)
 
 			ui.lineEdit->setVisible(false);
 			ui.label->setVisible(false);
+			ui.button_createPrefab->setEnabled(false);
 		}
 		else
 		{
