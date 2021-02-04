@@ -9,10 +9,13 @@
 #include <QStandardPaths>
 #include "ToolBoxLabel.h"
 #include <QStringList>
+#include "InfoWidget.h"
 
 //Points to User/Documents/JsonVisualEditorsPrefabs
 //Should be considered: this could be a variable that can be changed in settings in the future
 #define PREFAB_DIRECTORY QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/JsonVisualEditorsPrefabs/"
+
+#define DOCUMENTS_DIR QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
 
 VisualEditor::VisualEditor(QWidget *parent)
     : QMainWindow(parent)
@@ -64,12 +67,35 @@ VisualEditor::VisualEditor(QWidget *parent)
     connect(ui.actionSave_File, &QAction::triggered, this, &VisualEditor::SaveCurrentFile);
 
     connect(ui.actionOpen_2, &QAction::triggered, this, &VisualEditor::OpenNewFile);
+
+    connect(ui.actionNew_File, &QAction::triggered, this,[this]()
+    {
+        //create tab with empty name
+        FileTabWidget* newTab = new FileTabWidget("new file", this);
+        ui.tabWidget->addTab(newTab, newTab->FilePath);
+    });
+
+    connect(ui.actionInfo, &QAction::triggered, this, [this]()
+    {
+        InfoWidget* info = new InfoWidget(this);
+        info->showNormal();
+    });
 }
 
 void VisualEditor::SaveCurrentFile()
 {
     if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
     {
+        bool isNewFile = tab->FilePath == "new file";
+        if(isNewFile)
+        { 
+            tab->FilePath = QFileDialog::getSaveFileName
+            (this, "Save file as",
+                DOCUMENTS_DIR, 
+                ("Json Files (*.json *.bowerrc *jscsrc *webmanifest *js.map *css.map *ts.map *har *jslintrc *jsonId);;Any (*.*)")
+            );
+            
+        }
         QFile file(tab->FilePath);
         if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
         {
@@ -78,7 +104,16 @@ void VisualEditor::SaveCurrentFile()
 
         //Create and save file
         QJsonDocument boardDocument(tab->fileObject->GenerateJsonValue().toObject());
-        file.write(boardDocument.toJson());
+        file.write(boardDocument.toJson());   
+        file.close();
+
+        if (isNewFile)
+        {
+            FileTabWidget* newTab = new FileTabWidget(tab->FilePath, this);
+            ui.tabWidget->addTab(newTab, newTab->FilePath);
+        }
+
+        delete tab;
     }
 }
 

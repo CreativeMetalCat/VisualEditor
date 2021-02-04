@@ -69,8 +69,12 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew_File"/>
+    <addaction name="separator"/>
     <addaction name="actionOpen_2"/>
     <addaction name="actionSave_File"/>
+    <addaction name="separator"/>
+    <addaction name="actionInfo"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -92,6 +96,19 @@
   <action name="actionOpen_2">
    <property name="text">
     <string>Open</string>
+   </property>
+  </action>
+  <action name="actionNew_File">
+   <property name="text">
+    <string>New File</string>
+   </property>
+   <property name="toolTip">
+    <string>Creates new file and opens it's tab</string>
+   </property>
+  </action>
+  <action name="actionInfo">
+   <property name="text">
+    <string>Info</string>
    </property>
   </action>
  </widget>

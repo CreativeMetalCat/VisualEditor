@@ -88,6 +88,7 @@
   <ItemGroup>
     <QtRcc Include="VisualEditor.qrc" />
     <QtUic Include="FileTab.ui" />
+    <QtUic Include="InfoWidget.ui" />
     <QtUic Include="JSONObjectWidget.ui" />
     <QtUic Include="JSONPropertyWidget.ui" />
     <QtUic Include="JSONWidgetBase.ui" />
@@ -96,6 +97,7 @@
     <QtMoc Include="VisualEditor.h" />
     <ClCompile Include="FileTab.cpp" />
     <ClCompile Include="globals.cpp" />
+    <ClCompile Include="InfoWidget.cpp" />
     <ClCompile Include="JSONObjectWidget.cpp" />
     <ClCompile Include="JSONPropertyWidget.cpp" />
     <ClCompile Include="JSONWidgetBase.cpp" />
@@ -118,6 +120,7 @@
     <QtMoc Include="ToolBoxLabel.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="InfoWidget.h" />
     <QtMoc Include="FileTab.h" />
     <ClInclude Include="globals.h" />
   </ItemGroup>

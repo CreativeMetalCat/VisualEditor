@@ -14,7 +14,6 @@ public:
 
 
 	QString FilePath;
-
 private slots:
 
 private:
