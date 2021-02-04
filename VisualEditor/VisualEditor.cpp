@@ -80,6 +80,8 @@ VisualEditor::VisualEditor(QWidget *parent)
         InfoWidget* info = new InfoWidget(this);
         info->showNormal();
     });
+
+    connect(ui.actionSave_as, &QAction::triggered, this, &VisualEditor::SaveCurrentFileAs);
 }
 
 void VisualEditor::SaveCurrentFile()
@@ -112,6 +114,35 @@ void VisualEditor::SaveCurrentFile()
             FileTabWidget* newTab = new FileTabWidget(tab->FilePath, this);
             ui.tabWidget->addTab(newTab, newTab->FilePath);
         }
+
+        delete tab;
+    }
+}
+
+void VisualEditor::SaveCurrentFileAs()
+{
+    if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
+    {
+        tab->FilePath = QFileDialog::getSaveFileName
+        (this, "Save file as",
+            DOCUMENTS_DIR,
+            ("Json Files (*.json *.bowerrc *jscsrc *webmanifest *js.map *css.map *ts.map *har *jslintrc *jsonId);;Any (*.*)")
+        );
+
+        QFile file(tab->FilePath);
+        if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
+        {
+            QMessageBox::warning(this, "Warinig!", "Failed to open file!", QMessageBox::Ok, QMessageBox::Ok);
+        }
+
+        //Create and save file
+        QJsonDocument boardDocument(tab->fileObject->GenerateJsonValue().toObject());
+        file.write(boardDocument.toJson());
+        file.close();
+
+        FileTabWidget* newTab = new FileTabWidget(tab->FilePath, this);
+        ui.tabWidget->addTab(newTab, newTab->FilePath);
+
 
         delete tab;
     }

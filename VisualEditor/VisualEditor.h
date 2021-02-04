@@ -22,6 +22,8 @@ private:
 private slots:
     void SaveCurrentFile();
 
+    void SaveCurrentFileAs();
+
     void OpenNewFile();
 
     void OnTabClosed(int);
