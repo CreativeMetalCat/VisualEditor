@@ -158,6 +158,14 @@ void VisualEditor::SaveCurrentFile()
     }
 }
 
+void VisualEditor::closeEvent(QCloseEvent*event)
+{
+    if (ui.tabWidget->count() > 0)
+    {
+        
+    }
+}
+
 void VisualEditor::SaveCurrentFileAs()
 {
     if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))

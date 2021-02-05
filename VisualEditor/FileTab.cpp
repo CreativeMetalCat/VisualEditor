@@ -40,6 +40,20 @@ FileTabWidget::FileTabWidget(QString filePath, QWidget *parent)
     {
         fileObject = new JSONObjectWidget(QJsonObject(), this, "file", false);
         VerticalLayout->addWidget(fileObject);
+
+        Edited = true;
+    }
+
+    connect(fileObject, &JSONObjectWidget::OnChangeInChild, this, &FileTabWidget::OnChangeInFile);
+}
+
+void FileTabWidget::OnChangeInFile(EditorActions::SEditorAction* action)
+{
+    if (action->ActionType == EditorActions::SEditorAction::Type::TypeChange)
+    {
+        EditorActions::SPropertyTypeSelectionChangeAction*typeAction = static_cast<EditorActions::SPropertyTypeSelectionChangeAction*>(action);
+        qWarning() << typeAction->OldValue;
+        int i = 0;
     }
 }
 

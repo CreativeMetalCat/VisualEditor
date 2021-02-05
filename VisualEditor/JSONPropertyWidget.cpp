@@ -47,10 +47,43 @@ JSONPropertyWidget::JSONPropertyWidget(QWidget *parent, QString name, QJsonValue
 		ui.typeBox->setCurrentIndex(3);
 		ui.stackedWidget->setCurrentIndex(3);
 	}
+
+	if (JSONObjectWidget* obj = qobject_cast<JSONObjectWidget*>(this->parent()->parent()))
+	{
+		connect(this, &JSONWidgetBase::OnChanged, obj->GetFileObject(), &JSONObjectWidget::OnChildChanged);
+	}
 }
 
 void JSONPropertyWidget::OnTypeSelectionChanged(QString selection)
 {
+	switch (ui.stackedWidget->currentIndex())
+	{
+	case 0:
+		emit OnChanged(new EditorActions::SPropertyTypeSelectionChangeAction
+		(this, selection,
+			"Text"
+		));
+		break;
+	case 1:
+		emit OnChanged(new EditorActions::SPropertyTypeSelectionChangeAction
+		(this, selection,
+			"Boolean"
+		));
+		break;
+	case 2:
+		emit OnChanged(new EditorActions::SPropertyTypeSelectionChangeAction
+		(this, selection,
+			"Number"
+		));
+		break;
+	case 3:
+		emit OnChanged(new EditorActions::SPropertyTypeSelectionChangeAction
+		(this, selection,
+			"Null"
+		));
+		break;
+	}
+
 	if (selection == "Null")
 	{
 		ui.stackedWidget->setCurrentIndex(3);

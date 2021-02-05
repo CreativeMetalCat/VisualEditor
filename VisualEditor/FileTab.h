@@ -16,8 +16,11 @@ public:
 	QString FilePath;
 	Ui::FileTab ui;
 
-private slots:
+	bool Edited = false;
 
+
+private slots:
+	void OnChangeInFile(EditorActions::SEditorAction*);
 private:
 	
 

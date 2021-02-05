@@ -28,6 +28,9 @@ public:
 	/// <param name="value">data to load from</param>
 	void AddNewProperty(QString name,QJsonValue value);
 
+	void OnChildChanged(EditorActions::SEditorAction* action);
+signals:
+	void OnChangeInChild(EditorActions::SEditorAction*);
 public:
 	/// <summary>
 	/// Changes child id

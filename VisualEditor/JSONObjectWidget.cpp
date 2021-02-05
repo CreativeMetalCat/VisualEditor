@@ -63,6 +63,8 @@ JSONObjectWidget::JSONObjectWidget(QJsonObject jsonObject, QWidget *parent, QStr
 
 	ui->groupBox->installEventFilter(this);
 	ui->groupBox->setAcceptDrops(true);
+
+	connect(this, &JSONWidgetBase::OnChanged, GetFileObject(), &JSONObjectWidget::OnChildChanged);
 }
 
 JSONObjectWidget::JSONObjectWidget(QJsonArray jsonArray, QWidget* parent, QString name, bool AllowNameChange,bool isArray)
@@ -120,6 +122,9 @@ JSONObjectWidget::JSONObjectWidget(QJsonArray jsonArray, QWidget* parent, QStrin
 	//setup event filters to allow for dragging, property editing to occur
 	ui->groupBox->installEventFilter(this);
 	ui->groupBox->setAcceptDrops(true);
+
+	connect(this, &JSONWidgetBase::OnChanged, GetFileObject(), &JSONObjectWidget::OnChildChanged);
+
 }
 
 QJsonValue JSONObjectWidget::GenerateJsonValue()
@@ -169,6 +174,13 @@ void JSONObjectWidget::AddNewProperty(QString name, QJsonValue value)
 	ui->verticalLayoutBox->addWidget(jsonProperty);
 	jsonProperty->Id = ChildObjects.count();
 	ChildObjects.append(jsonProperty);
+}
+
+void JSONObjectWidget::OnChildChanged(EditorActions::SEditorAction* action)
+{
+	emit OnChangeInChild(action);
+
+	this->Name;
 }
 
 void JSONObjectWidget::ChangeChildId(int newId)
@@ -224,6 +236,10 @@ JSONObjectWidget* JSONObjectWidget::GetFileObject(JSONObjectWidget* start)
 	//parent is still JSON object so we ask it to get parent for us
 	//first parent will always be groupBox and parent of that is the actual object
 	if (JSONObjectWidget * parentObj = qobject_cast<JSONObjectWidget*>((start? start->parent(): parent())->parent()))
+	{
+		return  parentObj->GetFileObject();
+	}
+	else if (JSONObjectWidget* parentObj = qobject_cast<JSONObjectWidget*>(parent()))
 	{
 		return  parentObj->GetFileObject();
 	}

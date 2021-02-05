@@ -12,6 +12,8 @@ class VisualEditor : public QMainWindow
 
 public:
     VisualEditor(QWidget *parent = Q_NULLPTR);
+
+    virtual void closeEvent(QCloseEvent*)override;
 private:
     Ui::VisualEditorClass ui;
 

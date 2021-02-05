@@ -22,3 +22,17 @@ void JSONWidgetBase::mouseReleaseEvent(QMouseEvent*)
 {
 	VisualEditorGlobals::IsAnyObjectBeingMoved = false;
 }
+
+EditorActions::SPropertyValueChangeAction::SPropertyValueChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue)
+	:ChangedValue(changedValue), OldValue(oldValue)
+{
+	ActionSoure = actionSoure;
+	ActionType = Type::ValueChange;
+}
+
+EditorActions::SPropertyTypeSelectionChangeAction::SPropertyTypeSelectionChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue)
+	:ChangedValue(changedValue), OldValue(oldValue)
+{
+	ActionSoure = actionSoure;
+	ActionType = Type::TypeChange;
+}
