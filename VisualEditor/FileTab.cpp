@@ -49,11 +49,12 @@ FileTabWidget::FileTabWidget(QString filePath, QWidget *parent)
 
 void FileTabWidget::OnChangeInFile(EditorActions::SEditorAction* action)
 {
+    
     if (action->ActionType == EditorActions::SEditorAction::Type::TypeChange)
     {
         EditorActions::SPropertyTypeSelectionChangeAction*typeAction = static_cast<EditorActions::SPropertyTypeSelectionChangeAction*>(action);
         qWarning() << typeAction->OldValue;
-        int i = 0;
+        Edited = true;
     }
 }
 

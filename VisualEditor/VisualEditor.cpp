@@ -152,17 +152,57 @@ void VisualEditor::SaveCurrentFile()
         {
             FileTabWidget* newTab = new FileTabWidget(tab->FilePath, this);
             ui.tabWidget->addTab(newTab, newTab->FilePath);
-        }
 
-        delete tab;
+            delete tab;
+        }
+        tab->Edited = false;
+      
     }
 }
 
 void VisualEditor::closeEvent(QCloseEvent*event)
 {
+    int f = ui.tabWidget->count();
     if (ui.tabWidget->count() > 0)
     {
-        
+        for (int i = 0; i < ui.tabWidget->count(); i++)
+        {
+            if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->widget(i)))
+            {
+                if (tab->Edited)
+                {
+                    QMessageBox::StandardButton reply;
+                    reply = QMessageBox::question(this, "Save", "Do you wish to save changes?", QMessageBox::Yes | QMessageBox::No);
+                    if (reply == QMessageBox::Yes)
+                    {
+                        ui.tabWidget->setCurrentIndex(i);
+                        if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
+                        {
+                            QFile file(tab->FilePath);
+                            if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
+                            {
+                                QMessageBox::warning(this, "Warinig!", "Failed to open file!", QMessageBox::Ok, QMessageBox::Ok);
+                            }
+
+                            //Create and save file
+                            QJsonDocument boardDocument(tab->fileObject->GenerateJsonValue().toObject());
+                            file.write(boardDocument.toJson());
+                            i = -1;
+                            delete tab;
+                        }
+                    }
+                    if (reply == QMessageBox::No)
+                    {
+                        ui.tabWidget->setCurrentIndex(i);
+                        if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
+                        {
+                            i = -1;
+                            delete tab;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -204,40 +244,44 @@ void VisualEditor::OpenNewFile()
 
 void VisualEditor::OnTabClosed(int tabId)
 {
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Save", "Do you wish to save changes?", QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-    if (reply == QMessageBox::Yes)
+    if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
     {
-        ui.tabWidget->setCurrentIndex(tabId);
-        if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
+        if (tab->Edited)
         {
-            QFile file(tab->FilePath);
-            if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Save", "Do you wish to save changes?", QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+            if (reply == QMessageBox::Yes)
             {
-                QMessageBox::warning(this, "Warinig!", "Failed to open file!", QMessageBox::Ok, QMessageBox::Ok);
+                ui.tabWidget->setCurrentIndex(tabId);
+
+                QFile file(tab->FilePath);
+                if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
+                {
+                    QMessageBox::warning(this, "Warinig!", "Failed to open file!", QMessageBox::Ok, QMessageBox::Ok);
+                }
+
+                //Create and save file
+                QJsonDocument boardDocument(tab->fileObject->GenerateJsonValue().toObject());
+                file.write(boardDocument.toJson());
+
+                delete tab;
+
+                return;
             }
-
-            //Create and save file
-            QJsonDocument boardDocument(tab->fileObject->GenerateJsonValue().toObject());
-            file.write(boardDocument.toJson());
-
-            delete tab;
+            if (reply == QMessageBox::No)
+            {
+                ui.tabWidget->setCurrentIndex(tabId);
+                if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
+                {
+                    delete tab;
+                }
+                return;
+            }
+            if (reply == QMessageBox::Cancel)
+            {
+                //do nothing and tab won't be closed
+            }
         }
-        return;
-    }
-    if (reply == QMessageBox::No)
-    {
-        ui.tabWidget->setCurrentIndex(tabId);
-        if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
-        {
-            delete tab;
-        }
-        return;
-    }
-    if (reply == QMessageBox::Cancel)
-    {
-        //do nothing and tab won't be closed
-    }
 }
 
 void VisualEditor::PerformSearch()
