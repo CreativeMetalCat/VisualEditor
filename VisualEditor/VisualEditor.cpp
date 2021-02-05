@@ -10,6 +10,8 @@
 #include "ToolBoxLabel.h"
 #include <QStringList>
 #include "InfoWidget.h"
+#include "SearchWindowWidget.h"
+#include <QScrollBar>
 
 //Points to User/Documents/JsonVisualEditorsPrefabs
 //Should be considered: this could be a variable that can be changed in settings in the future
@@ -82,6 +84,43 @@ VisualEditor::VisualEditor(QWidget *parent)
     });
 
     connect(ui.actionSave_as, &QAction::triggered, this, &VisualEditor::SaveCurrentFileAs);
+
+    connect(ui.actionSearch, &QAction::triggered, this, [this]()
+    {
+        //check if any search window is open
+        if (!IsSearchWindowOpen)
+        {
+            IsSearchWindowOpen = true;
+
+            if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
+            {
+                auto list = tab->fileObject->GetListOfAllJsonWidgets();
+                //spawn widget
+                SearchWindowWidget* searchWidget = new SearchWindowWidget(list, this);
+                searchWidget->showNormal();
+
+                //connect to close event to reset values
+                connect(searchWidget, &QWidget::close, this, [this]()
+                {
+                    IsSearchWindowOpen = false;
+                });
+
+                connect(searchWidget, &SearchWindowWidget::OnSeacrhComplete, this, [this,tab,list](bool success, int id)
+                {
+                    if (success)
+                    {
+                        tab->ui.scrollArea->verticalScrollBar()->setValue(list.at(id)->pos().y());
+
+                        tab->ui.scrollArea->horizontalScrollBar()->setValue(list.at(id)->pos().x());
+                    }
+                    else
+                    {
+                        QMessageBox::warning(this, "Didn't find!", "Nothing matching the input data was found!");
+                    }
+                });
+            }
+        }
+    });
 }
 
 void VisualEditor::SaveCurrentFile()
@@ -158,7 +197,7 @@ void VisualEditor::OpenNewFile()
 void VisualEditor::OnTabClosed(int tabId)
 {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::warning(this, "File not saved!", "File changes not saved! \n Save?", QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+    reply = QMessageBox::question(this, "Save", "Do you wish to save changes?", QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
     if (reply == QMessageBox::Yes)
     {
         ui.tabWidget->setCurrentIndex(tabId);
@@ -191,4 +230,9 @@ void VisualEditor::OnTabClosed(int tabId)
     {
         //do nothing and tab won't be closed
     }
+}
+
+void VisualEditor::PerformSearch()
+{
+
 }

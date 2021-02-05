@@ -39,6 +39,8 @@ JSONPropertyWidget::JSONPropertyWidget(QWidget *parent, QString name, QJsonValue
 			break;
 		}
 		ui.nameEdit->setText(name);
+
+		type = value.type();
 	}
 	else
 	{

@@ -14,10 +14,12 @@ public:
 
 
 	QString FilePath;
+	Ui::FileTab ui;
+
 private slots:
 
 private:
-	Ui::FileTab ui;
+	
 
 	QVBoxLayout* VerticalLayout;
 	QWidget* scrollWidget;

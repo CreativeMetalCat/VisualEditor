@@ -14,13 +14,14 @@ public:
 
 	virtual QJsonValue GenerateJsonValue() override;
 
+	QJsonValue::Type type;
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent*)override;
 
 	virtual void mousePressEvent(QMouseEvent*)override;
 
 	virtual void mouseReleaseEvent(QMouseEvent*)override;
-private:
+public:
 	Ui::JSONPropertyWidget ui;
 private slots:
 	void OnTypeSelectionChanged(QString selection);

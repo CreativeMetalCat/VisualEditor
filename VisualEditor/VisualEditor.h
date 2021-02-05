@@ -19,6 +19,8 @@ private:
 
     QWidget* toolBoxScrollWidget;
     QVBoxLayout* toolBoxScrollVertialLayout;
+
+    bool IsSearchWindowOpen = false;
 private slots:
     void SaveCurrentFile();
 
@@ -27,4 +29,6 @@ private slots:
     void OpenNewFile();
 
     void OnTabClosed(int);
+
+    void PerformSearch();
 };

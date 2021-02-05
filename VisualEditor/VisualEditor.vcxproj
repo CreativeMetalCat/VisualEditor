@@ -93,6 +93,7 @@
     <QtUic Include="JSONPropertyWidget.ui" />
     <QtUic Include="JSONWidgetBase.ui" />
     <QtUic Include="PropertyEditor.ui" />
+    <QtUic Include="SearchWindowWidget.ui" />
     <QtUic Include="VisualEditor.ui" />
     <QtMoc Include="VisualEditor.h" />
     <ClCompile Include="FileTab.cpp" />
@@ -102,6 +103,7 @@
     <ClCompile Include="JSONPropertyWidget.cpp" />
     <ClCompile Include="JSONWidgetBase.cpp" />
     <ClCompile Include="PropertyEditor.cpp" />
+    <ClCompile Include="SearchWindowWidget.cpp" />
     <ClCompile Include="ToolBoxLabel.cpp" />
     <ClCompile Include="VisualEditor.cpp" />
     <ClCompile Include="main.cpp" />
@@ -120,6 +122,7 @@
     <QtMoc Include="ToolBoxLabel.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="SearchWindowWidget.h" />
     <QtMoc Include="InfoWidget.h" />
     <QtMoc Include="FileTab.h" />
     <ClInclude Include="globals.h" />
