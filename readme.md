@@ -2,7 +2,7 @@
 Visual editor is a small app made by me to better learn and refresh my knowledge  Qt and c++
 ## What does it do
 This app allows you to edit json file in visual form allowing for faster creation of the files
-
+![example](https://github.com/CreativeMetalCat/VisualEditor/blob/master/VisualEditor/example.png)
 ## Notes
 This app is far from being comfortably usable as it was not the goal
 
