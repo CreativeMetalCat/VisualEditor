@@ -183,12 +183,32 @@ void JSONObjectWidget::OnChildChanged(EditorActions::SEditorAction* action)
 	this->Name;
 }
 
+void JSONObjectWidget::ChangeChildId(int newId, JSONWidgetBase* objToEdit)
+{
+	//no point in trying to change child id if it's the only child or given id is bad
+	if (ChildObjects.count() > 1 && newId >= 0 && newId < ChildObjects.count() && objToEdit)
+	{
+		//we need to find id of widget that is currently occuping that place
+		//id of the current object
+		//move them and then update id of every other object(by doing same this as was done during creation)
+
+		//check if widget is part of current widgets
+		if (ChildObjects.contains(objToEdit))
+		{
+			ChildObjects.move(ChildObjects.indexOf(objToEdit, 0), newId);
+
+			ShakeChildren();
+		}
+	}
+}
+
 void JSONObjectWidget::ChangeChildId(int newId)
 {
 	//no point in trying to change child id if it's the only child or given id is bad
-	if (ChildObjects.count() > 1 && newId > 0)
+	if (ChildObjects.count() > 1 && newId >= 0 && newId < ChildObjects.count() && sender())
 	{
-		if(PropertyEditor*editor = qobject_cast<PropertyEditor*>(sender()->parent()))
+
+		if (PropertyEditor* editor = qobject_cast<PropertyEditor*>(sender()->parent()))
 		{
 			//we need to find id of widget that is currently occuping that place
 			//id of the current object
@@ -336,7 +356,7 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				//create new window and setup it's events
 				PropertyEditor* propEdit = new PropertyEditor(this, this);
 
-				connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, [this](int newId) {ChangeChildId(newId); });
+				connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, [this, obj](int newId) {obj->ChangeChildId(newId, this); });
 
 				connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, [this]() { DeleteChild(); });
 

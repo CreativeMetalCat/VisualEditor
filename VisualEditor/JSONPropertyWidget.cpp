@@ -18,6 +18,19 @@ JSONPropertyWidget::JSONPropertyWidget(QWidget *parent, QString name, QJsonValue
 	connect(ui.typeBox, &QComboBox::currentTextChanged, this, &JSONPropertyWidget::OnTypeSelectionChanged);
 	connect(ui.nameEdit, &QLineEdit::textChanged, this, &JSONPropertyWidget::OnTextChanged);
 
+	connect(ui.doubleSpinBox, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [this](double value)
+	{
+		emit OnChanged(new EditorActions::SPropertyValueChangeAction(this, QString::number(value),QString::number(CurrentSpinBoxValue), QJsonValue::Double));
+		CurrentSpinBoxValue = value;
+	});
+
+	connect(ui.boolValue, &QCheckBox::stateChanged, this, [this](bool newState)
+	{
+		//because bool can only have two states, it is simple to find out what it was before by getting of opposite of current value
+		emit OnChanged(new EditorActions::SPropertyValueChangeAction(this, newState ? "True" : "False", !newState ? "True" : "False", QJsonValue::Bool));
+	});
+
+
 	if (value != QJsonValue())
 	{
 		switch (value.type())
@@ -150,7 +163,7 @@ void JSONPropertyWidget::contextMenuEvent(QContextMenuEvent*event)
 		{
 			PropertyEditor* propEdit = new PropertyEditor(this, this);
 
-			connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, &JSONWidgetBase::ChangeChildId);
+			connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, qOverload<int>(&JSONWidgetBase::ChangeChildId));
 
 			connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONWidgetBase::DeleteChild);
 
@@ -203,13 +216,14 @@ void JSONPropertyWidget::mouseReleaseEvent(QMouseEvent*)
 
 void JSONPropertyWidget::OnIdSpinBoxValueChanged(int newId)
 {
-	 ChangeChildId(newId);
+	 ChangeChildId(newId,Q_NULLPTR);
 }
 
 void JSONPropertyWidget::OnTextChanged(QString text)
 {
 	if (text != "")
 	{
+		emit OnChanged(new EditorActions::SPropertyValueChangeAction(this, text, Name, QJsonValue::Double));
 		Name = text;
 	}
 }

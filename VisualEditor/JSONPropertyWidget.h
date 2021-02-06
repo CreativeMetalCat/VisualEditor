@@ -25,6 +25,9 @@ protected:
 	virtual void mousePressEvent(QMouseEvent*)override;
 
 	virtual void mouseReleaseEvent(QMouseEvent*)override;
+
+	//Keep old value in memory for simplier work with editor action of chaning spin box value
+	double CurrentSpinBoxValue = 0;
 public:
 	Ui::JSONPropertyWidget ui;
 private slots:
