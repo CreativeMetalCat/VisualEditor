@@ -19,6 +19,8 @@ public:
 	//does same job as OnTypeSelectionChanged(QString selection)
 	//but doesn't emit any signals
 	void ChangeTypeSelection(QString type);
+
+	virtual void ChangeName(QString name);
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent*)override;
 

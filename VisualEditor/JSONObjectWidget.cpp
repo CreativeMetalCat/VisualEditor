@@ -225,6 +225,12 @@ void JSONObjectWidget::ChangeChildId_NoSignal(int newId, JSONWidgetBase* objToEd
 	}
 }
 
+void JSONObjectWidget::ChangeName_NoSignal(QString name)
+{
+	Name = name;
+	ui->groupBox->setTitle(name);
+}
+
 void JSONObjectWidget::ChangeChildId(int newId)
 {
 	//no point in trying to change child id if it's the only child or given id is bad
@@ -396,6 +402,7 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				{
 					if (newName != "")
 					{
+						emit OnChanged(new EditorActions::SNameChangeAction(this, newName, Name));
 						ui->groupBox->setTitle(newName + QString(IsArray ? "[]" : ""));
 						Name = newName;
 					}

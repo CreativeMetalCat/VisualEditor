@@ -20,7 +20,9 @@ namespace EditorActions
 			ValueChange,
 			NameChange,
 			IdInParentChange,
-			TypeChange
+			TypeChange,
+			TreeAdded,
+			TreeRemoved
 		};
 		Type ActionType = Type::None;
 
@@ -59,7 +61,11 @@ public:
 	
 	virtual void mouseReleaseEvent(QMouseEvent*)override;
 
-
+	/// <summary>
+	/// Changes name without emiting any signals, used by undo system
+	/// </summary>
+	/// <param name="name"></param>
+	virtual void ChangeName_NoSignal(QString name) { Name = name; }
 signals:
 	void OnChanged(EditorActions::SEditorAction*);
 protected:
@@ -114,6 +120,17 @@ namespace EditorActions
 		JSONWidgetBase* MovedChild = Q_NULLPTR;
 
 		SWidgetIdChangeAction(JSONWidgetBase* actionSoure, JSONWidgetBase* movedChild, int oldId, int newId);
+	};
+
+	class SNameChangeAction :public SEditorAction
+	{
+	public:
+
+		QString ChangedValue = "Null";
+
+		QString OldValue = "Null";
+
+		SNameChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue);
 	};
 }
 

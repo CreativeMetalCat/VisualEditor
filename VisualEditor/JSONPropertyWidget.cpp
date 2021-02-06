@@ -153,6 +153,12 @@ void JSONPropertyWidget::ChangeTypeSelection(QString type)
 	}
 }
 
+void JSONPropertyWidget::ChangeName(QString name)
+{
+	Name = name;
+	ui.nameEdit->setText(name);
+}
+
 void JSONPropertyWidget::contextMenuEvent(QContextMenuEvent*event)
 {
 	if (!VisualEditorGlobals::IsAnyPropertyBeingEdited)
@@ -223,7 +229,7 @@ void JSONPropertyWidget::OnTextChanged(QString text)
 {
 	if (text != "")
 	{
-		emit OnChanged(new EditorActions::SPropertyValueChangeAction(this, text, Name, QJsonValue::Double));
+		emit OnChanged(new EditorActions::SNameChangeAction(this, text, Name));
 		Name = text;
 	}
 }

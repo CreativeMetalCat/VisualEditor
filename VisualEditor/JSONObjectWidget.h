@@ -44,6 +44,8 @@ public:
 	/// <param name="newId"></param>
 	virtual void ChangeChildId_NoSignal(int newId, JSONWidgetBase* objToEdit)override;
 
+	virtual void ChangeName_NoSignal(QString)override;
+
 	/// <summary>
 	/// Changes child id
 	/// </summary>

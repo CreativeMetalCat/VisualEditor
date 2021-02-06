@@ -68,6 +68,13 @@ void FileTabWidget::OnChangeInFile(EditorActions::SEditorAction* action)
         EditorActions::SWidgetIdChangeAction* Action = static_cast<EditorActions::SWidgetIdChangeAction*>(action);
         qWarning() << Action->MovedChild->Name;
     }
+    if (action->ActionType == EditorActionType::NameChange)
+    {
+        EditorActions::SNameChangeAction* nameAct = static_cast<EditorActions::SNameChangeAction*>(action);
+
+        qWarning() << nameAct->OldValue;
+    }
+
 }
 
 FileTabWidget::~FileTabWidget()
@@ -83,7 +90,7 @@ void FileTabWidget::UndoAction()
     3) Value change <- Fields themselves have undo/redo feature
     4) Tree removal
     5) Tree addition
-    6) Changing of id in parent
+    6) Changing of id in parent <- done
     */
     if (!Actions.empty())
     {
@@ -110,6 +117,14 @@ void FileTabWidget::UndoAction()
         }
         if (act->ActionType == EditorActionType::ValueChange)
         {
+            //remove last action(because we already redid it)
+            Actions.pop_back();
+        }
+        if (act->ActionType == EditorActionType::NameChange)
+        {
+            EditorActions::SNameChangeAction* action = static_cast<EditorActions::SNameChangeAction*>(act);
+            action->ActionSoure->ChangeName_NoSignal(action->OldValue);
+
             //remove last action(because we already redid it)
             Actions.pop_back();
         }

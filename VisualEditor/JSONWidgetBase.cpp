@@ -43,3 +43,10 @@ EditorActions::SWidgetIdChangeAction::SWidgetIdChangeAction(JSONWidgetBase* acti
 	ActionSoure = actionSoure;
 	ActionType = Type::IdInParentChange;
 }
+
+EditorActions::SNameChangeAction::SNameChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue)
+	:ChangedValue(changedValue), OldValue(oldValue)
+{
+	ActionSoure = actionSoure;
+	ActionType = Type::NameChange;
+}
