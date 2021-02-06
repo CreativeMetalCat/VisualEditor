@@ -143,7 +143,9 @@ namespace EditorActions
 
 		bool IsArray = false;
 
-		STreeRemovalAction(JSONWidgetBase* actionSoure, QJsonValue treeValue, QString objectName, bool IsArray = false);
+		bool IsProperty = false;
+
+		STreeRemovalAction(JSONWidgetBase* actionSoure, QJsonValue treeValue, QString objectName, bool IsArray = false, bool IsProperty = false);
 	};
 }
 

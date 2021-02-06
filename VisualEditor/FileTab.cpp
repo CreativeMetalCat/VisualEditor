@@ -66,9 +66,9 @@ void FileTabWidget::UndoAction()
     /*based on the action itself different actions will happen
     There are limited amount of those
     1) Type change <- Done
-    2) Name Change
+    2) Name Change <- Done
     3) Value change <- Fields themselves have undo/redo feature
-    4) Tree removal
+    4) Tree removal <- Done
     5) Tree addition
     6) Changing of id in parent <- done
     */
@@ -113,8 +113,14 @@ void FileTabWidget::UndoAction()
             EditorActions::STreeRemovalAction* action = static_cast<EditorActions::STreeRemovalAction*>(act);
             //only parents can have child trees so we don't need to worry about that
             JSONObjectWidget* obj = static_cast<JSONObjectWidget*>(action->ActionSoure);
-            obj->AddChildObject(new JSONObjectWidget(action->TreeValue.toObject(), obj, action->ObjectName, true, action->IsArray));
-
+            if (action->IsProperty)
+            {
+                obj->AddNewProperty(action->ObjectName, action->TreeValue);
+            }
+            else
+            {
+                obj->AddChildObject(new JSONObjectWidget(action->TreeValue.toObject(), obj, action->ObjectName, true, action->IsArray));
+            }
             //remove last action(because we already redid it)
             Actions.pop_back();
         }

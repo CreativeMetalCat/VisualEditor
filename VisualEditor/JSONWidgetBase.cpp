@@ -51,8 +51,8 @@ EditorActions::SNameChangeAction::SNameChangeAction(JSONWidgetBase* actionSoure,
 	ActionType = Type::NameChange;
 }
 
-EditorActions::STreeRemovalAction::STreeRemovalAction(JSONWidgetBase* actionSoure, QJsonValue treeValue, QString objectName, bool isArray)
-	:TreeValue(treeValue),ObjectName(objectName),IsArray(isArray)
+EditorActions::STreeRemovalAction::STreeRemovalAction(JSONWidgetBase* actionSoure, QJsonValue treeValue, QString objectName, bool isArray, bool isProperty)
+	:TreeValue(treeValue),ObjectName(objectName),IsArray(isArray), IsProperty(isProperty)
 {
 	ActionSoure = actionSoure;
 	ActionType = Type::TreeRemoved;

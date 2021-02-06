@@ -280,7 +280,10 @@ void JSONObjectWidget::DeleteChild()
 			emit OnChanged(new EditorActions::STreeRemovalAction
 			(	this,
 				editor->WidgetToEdit->GenerateJsonValue(),
-				editor->WidgetToEdit->Name, editor->WidgetToEdit->Type == QJsonValue::Array)
+				editor->WidgetToEdit->Name,
+				editor->WidgetToEdit->Type == QJsonValue::Array,
+				//this gets auto converted because nullptr is 0 or false and as such anything else(valid object) is true
+				qobject_cast<JSONPropertyWidget*>(editor->WidgetToEdit))
 			);
 
 			//remove it from list so it would not be written into the file
