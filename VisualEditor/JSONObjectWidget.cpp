@@ -195,6 +195,29 @@ void JSONObjectWidget::ChangeChildId(int newId, JSONWidgetBase* objToEdit)
 		//check if widget is part of current widgets
 		if (ChildObjects.contains(objToEdit))
 		{
+			int id = ChildObjects.indexOf(objToEdit, 0);
+			emit OnChanged(new EditorActions::SWidgetIdChangeAction(this, objToEdit, id, newId));
+
+			ChildObjects.move(id, newId);
+
+			ShakeChildren();
+
+		}
+	}
+}
+
+void JSONObjectWidget::ChangeChildId_NoSignal(int newId, JSONWidgetBase* objToEdit)
+{
+	//no point in trying to change child id if it's the only child or given id is bad
+	if (ChildObjects.count() > 1 && newId >= 0 && newId < ChildObjects.count() && objToEdit)
+	{
+		//we need to find id of widget that is currently occuping that place
+		//id of the current object
+		//move them and then update id of every other object(by doing same this as was done during creation)
+
+		//check if widget is part of current widgets
+		if (ChildObjects.contains(objToEdit))
+		{
 			ChildObjects.move(ChildObjects.indexOf(objToEdit, 0), newId);
 
 			ShakeChildren();
@@ -217,6 +240,9 @@ void JSONObjectWidget::ChangeChildId(int newId)
 			//check if widget is part of current widgets
 			if (ChildObjects.contains(editor->WidgetToEdit))
 			{
+				int id = ChildObjects.indexOf(editor->WidgetToEdit, 0);
+				emit OnChanged(new EditorActions::SWidgetIdChangeAction(this, editor->WidgetToEdit, id, newId));
+
 				ChildObjects.move(ChildObjects.indexOf(editor->WidgetToEdit, 0), newId);
 
 				ShakeChildren();

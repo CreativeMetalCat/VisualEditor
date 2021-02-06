@@ -36,3 +36,10 @@ EditorActions::SPropertyTypeSelectionChangeAction::SPropertyTypeSelectionChangeA
 	ActionSoure = actionSoure;
 	ActionType = Type::TypeChange;
 }
+
+EditorActions::SWidgetIdChangeAction::SWidgetIdChangeAction(JSONWidgetBase* actionSoure, JSONWidgetBase* movedChild, int oldId, int newId)
+	:MovedChild(movedChild),OldId(oldId),NewId(newId)
+{
+	ActionSoure = actionSoure;
+	ActionType = Type::IdInParentChange;
+}

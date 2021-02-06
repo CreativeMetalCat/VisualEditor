@@ -62,6 +62,12 @@ void FileTabWidget::OnChangeInFile(EditorActions::SEditorAction* action)
         qWarning() << typeAction->OldValue;
       
     }
+
+    if (action->ActionType == EditorActionType::IdInParentChange)
+    {
+        EditorActions::SWidgetIdChangeAction* Action = static_cast<EditorActions::SWidgetIdChangeAction*>(action);
+        qWarning() << Action->MovedChild->Name;
+    }
 }
 
 FileTabWidget::~FileTabWidget()
@@ -94,9 +100,18 @@ void FileTabWidget::UndoAction()
             //remove last action(because we already redid it)
             Actions.pop_back();
         }
-        if(act->ActionType == EditorActionType::ValueChange)
+        if(act->ActionType == EditorActionType::IdInParentChange)
         {
-            //this is handled by editable fields themselves
+            EditorActions::SWidgetIdChangeAction* action = static_cast<EditorActions::SWidgetIdChangeAction*>(act);
+            action->ActionSoure->ChangeChildId_NoSignal(action->OldId, action->MovedChild);
+
+            //remove last action(because we already redid it)
+            Actions.pop_back();
+        }
+        if (act->ActionType == EditorActionType::ValueChange)
+        {
+            //remove last action(because we already redid it)
+            Actions.pop_back();
         }
     }
 }

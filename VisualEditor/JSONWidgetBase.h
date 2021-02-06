@@ -67,9 +67,11 @@ protected:
 	QJsonValue::Type Type = QJsonValue::Type::Undefined;
 
 public slots:
-	virtual void ChangeChildId(int newId,JSONWidgetBase*pobjToEdit){}
+	virtual void ChangeChildId(int newId,JSONWidgetBase*objToEdit){}
 
 	virtual void ChangeChildId(int newId) {}
+
+	virtual void ChangeChildId_NoSignal(int newId, JSONWidgetBase* objToEdit) {}
 
 	virtual void DeleteChild() {}
 
@@ -100,6 +102,18 @@ namespace EditorActions
 		QString OldValue = "Null";
 
 		SPropertyTypeSelectionChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue);
+	};
+
+	class SWidgetIdChangeAction :public SEditorAction
+	{
+	public:
+		int OldId = -1;
+
+		int NewId = -1;
+
+		JSONWidgetBase* MovedChild = Q_NULLPTR;
+
+		SWidgetIdChangeAction(JSONWidgetBase* actionSoure, JSONWidgetBase* movedChild, int oldId, int newId);
 	};
 }
 
