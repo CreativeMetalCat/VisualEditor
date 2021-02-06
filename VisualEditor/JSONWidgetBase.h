@@ -98,3 +98,5 @@ namespace EditorActions
 		SPropertyTypeSelectionChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue);
 	};
 }
+
+typedef EditorActions::SEditorAction::Type EditorActionType;

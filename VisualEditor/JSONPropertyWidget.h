@@ -15,6 +15,10 @@ public:
 	virtual QJsonValue GenerateJsonValue() override;
 
 	QJsonValue::Type type;
+
+	//does same job as OnTypeSelectionChanged(QString selection)
+	//but doesn't emit any signals
+	void ChangeTypeSelection(QString type);
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent*)override;
 

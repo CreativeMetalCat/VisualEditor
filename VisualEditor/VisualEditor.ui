@@ -91,6 +91,8 @@
      <string>Tools</string>
     </property>
     <addaction name="actionSearch"/>
+    <addaction name="separator"/>
+    <addaction name="actionUndo"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
@@ -136,6 +138,11 @@
   <action name="actionSearch">
    <property name="text">
     <string>Search</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
    </property>
   </action>
  </widget>

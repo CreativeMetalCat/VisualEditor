@@ -121,6 +121,8 @@ VisualEditor::VisualEditor(QWidget *parent)
             }
         }
     });
+
+    connect(ui.actionUndo, &QAction::triggered, this, &VisualEditor::CallUndoActionInTab);
 }
 
 void VisualEditor::SaveCurrentFile()
@@ -282,9 +284,16 @@ void VisualEditor::OnTabClosed(int tabId)
                 //do nothing and tab won't be closed
             }
         }
+    }
 }
 
-void VisualEditor::PerformSearch()
+void VisualEditor::CallUndoActionInTab()
 {
-
+    if (ui.tabWidget->count() > 0)
+    {
+        if (FileTabWidget* tab = qobject_cast<FileTabWidget*>(ui.tabWidget->currentWidget()))
+        {
+            tab->UndoAction();
+        }
+    }
 }

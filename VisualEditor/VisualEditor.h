@@ -32,5 +32,5 @@ private slots:
 
     void OnTabClosed(int);
 
-    void PerformSearch();
+    void CallUndoActionInTab();
 };

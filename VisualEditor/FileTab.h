@@ -18,7 +18,10 @@ public:
 
 	bool Edited = false;
 
+	//For undo list
+	QVector<EditorActions::SEditorAction*> Actions = QVector<EditorActions::SEditorAction*>();
 
+	void UndoAction();
 private slots:
 	void OnChangeInFile(EditorActions::SEditorAction*);
 private:

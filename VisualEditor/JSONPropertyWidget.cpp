@@ -120,6 +120,26 @@ QJsonValue JSONPropertyWidget::GenerateJsonValue()
 	}
 }
 
+void JSONPropertyWidget::ChangeTypeSelection(QString type)
+{
+	if (type == "Null")
+	{
+		ui.stackedWidget->setCurrentIndex(3);
+	}
+	if (type == "Boolean")
+	{
+		ui.stackedWidget->setCurrentIndex(1);
+	}
+	if (type == "Number")
+	{
+		ui.stackedWidget->setCurrentIndex(2);
+	}
+	if (type == "Text")
+	{
+		ui.stackedWidget->setCurrentIndex(0);
+	}
+}
+
 void JSONPropertyWidget::contextMenuEvent(QContextMenuEvent*event)
 {
 	if (!VisualEditorGlobals::IsAnyPropertyBeingEdited)
