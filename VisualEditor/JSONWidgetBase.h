@@ -68,7 +68,7 @@ public:
 	virtual void ChangeName_NoSignal(QString name) { Name = name; }
 signals:
 	void OnChanged(EditorActions::SEditorAction*);
-protected:
+public:
 	//Type of the object that will be used in json file generation
 	QJsonValue::Type Type = QJsonValue::Type::Undefined;
 
@@ -80,6 +80,8 @@ public slots:
 	virtual void ChangeChildId_NoSignal(int newId, JSONWidgetBase* objToEdit) {}
 
 	virtual void DeleteChild() {}
+
+	virtual void DeleteChild_NoSignal() {}
 
 private:
 	Ui::JSONWidgetBase ui;
@@ -131,6 +133,17 @@ namespace EditorActions
 		QString OldValue = "Null";
 
 		SNameChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue);
+	};
+
+	class STreeRemovalAction :public SEditorAction
+	{
+	public:
+		QString ObjectName;
+		QJsonValue TreeValue;
+
+		bool IsArray = false;
+
+		STreeRemovalAction(JSONWidgetBase* actionSoure, QJsonValue treeValue, QString objectName, bool IsArray = false);
 	};
 }
 

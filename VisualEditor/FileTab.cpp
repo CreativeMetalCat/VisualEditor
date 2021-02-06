@@ -55,26 +55,6 @@ void FileTabWidget::OnChangeInFile(EditorActions::SEditorAction* action)
         Edited = true;
         Actions.append(action);
     }
-
-    if (action->ActionType == EditorActions::SEditorAction::Type::TypeChange)
-    {
-        EditorActions::SPropertyTypeSelectionChangeAction*typeAction = static_cast<EditorActions::SPropertyTypeSelectionChangeAction*>(action);
-        qWarning() << typeAction->OldValue;
-      
-    }
-
-    if (action->ActionType == EditorActionType::IdInParentChange)
-    {
-        EditorActions::SWidgetIdChangeAction* Action = static_cast<EditorActions::SWidgetIdChangeAction*>(action);
-        qWarning() << Action->MovedChild->Name;
-    }
-    if (action->ActionType == EditorActionType::NameChange)
-    {
-        EditorActions::SNameChangeAction* nameAct = static_cast<EditorActions::SNameChangeAction*>(action);
-
-        qWarning() << nameAct->OldValue;
-    }
-
 }
 
 FileTabWidget::~FileTabWidget()
@@ -124,6 +104,16 @@ void FileTabWidget::UndoAction()
         {
             EditorActions::SNameChangeAction* action = static_cast<EditorActions::SNameChangeAction*>(act);
             action->ActionSoure->ChangeName_NoSignal(action->OldValue);
+
+            //remove last action(because we already redid it)
+            Actions.pop_back();
+        }
+        if (act->ActionType == EditorActionType::TreeRemoved)
+        {
+            EditorActions::STreeRemovalAction* action = static_cast<EditorActions::STreeRemovalAction*>(act);
+            //only parents can have child trees so we don't need to worry about that
+            JSONObjectWidget* obj = static_cast<JSONObjectWidget*>(action->ActionSoure);
+            obj->AddChildObject(new JSONObjectWidget(action->TreeValue.toObject(), obj, action->ObjectName, true, action->IsArray));
 
             //remove last action(because we already redid it)
             Actions.pop_back();

@@ -176,6 +176,13 @@ void JSONObjectWidget::AddNewProperty(QString name, QJsonValue value)
 	ChildObjects.append(jsonProperty);
 }
 
+void JSONObjectWidget::AddChildObject(JSONObjectWidget*child)
+{
+	child->Id = ChildObjects.count();
+	ui->verticalLayoutBox->addWidget(child);
+	ChildObjects.append(child);
+}
+
 void JSONObjectWidget::OnChildChanged(EditorActions::SEditorAction* action)
 {
 	emit OnChangeInChild(action);
@@ -262,6 +269,35 @@ void JSONObjectWidget::ChangeChildId(int newId)
 }
 
 void JSONObjectWidget::DeleteChild()
+{
+	//if we have noi children - there is nothing to delete
+	if (!ChildObjects.empty() && sender())
+	{
+		auto s = sender();
+		//we have to get the editor window to get widget to delete
+		if (PropertyEditor* editor = qobject_cast<PropertyEditor*>(sender()->parent()))
+		{
+			emit OnChanged(new EditorActions::STreeRemovalAction
+			(	this,
+				editor->WidgetToEdit->GenerateJsonValue(),
+				editor->WidgetToEdit->Name, editor->WidgetToEdit->Type == QJsonValue::Array)
+			);
+
+			//remove it from list so it would not be written into the file
+			ChildObjects.removeOne(editor->WidgetToEdit);
+
+			//remove it from window
+			ui->verticalLayoutBox->removeWidget(editor->WidgetToEdit);
+
+			//delete it fully to avoid bugs
+			delete editor->WidgetToEdit;
+
+			VisualEditorGlobals::IsAnyPropertyBeingEdited = false;
+		}
+	}
+}
+
+void JSONObjectWidget::DeleteChild_NoSignal()
 {
 	//if we have noi children - there is nothing to delete
 	if (!ChildObjects.empty())
@@ -390,7 +426,7 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 
 				connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, [this, obj](int newId) {obj->ChangeChildId(newId, this); });
 
-				connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, [this]() { DeleteChild(); });
+				connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, [obj]() { obj->DeleteChild(); });
 
 				connect(propEdit->GetIsArrayCheckBox(), &QCheckBox::stateChanged, this, [this](bool newState)
 				{

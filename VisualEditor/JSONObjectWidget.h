@@ -28,6 +28,8 @@ public:
 	/// <param name="value">data to load from</param>
 	void AddNewProperty(QString name,QJsonValue value);
 
+	void AddChildObject(JSONObjectWidget*);
+
 	void OnChildChanged(EditorActions::SEditorAction* action);
 signals:
 	void OnChangeInChild(EditorActions::SEditorAction*);
@@ -56,6 +58,8 @@ public:
 	/// Removes child told by PropertyEditor
 	/// </summary>
 	virtual void DeleteChild()override;
+
+	virtual void DeleteChild_NoSignal()override;
 
 	bool IsArray = false;
 	/// <summary>
