@@ -1,4 +1,5 @@
 <RCC>
-    <qresource prefix="VisualEditor">
+    <qresource prefix="/VisualEditor">
+        <file>ve.ico</file>
     </qresource>
 </RCC>

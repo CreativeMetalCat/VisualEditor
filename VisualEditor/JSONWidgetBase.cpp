@@ -23,37 +23,44 @@ void JSONWidgetBase::mouseReleaseEvent(QMouseEvent*)
 	VisualEditorGlobals::IsAnyObjectBeingMoved = false;
 }
 
-EditorActions::SPropertyValueChangeAction::SPropertyValueChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue, QJsonValue::Type valueType)
+EditorActions::SPropertyValueChangeAction::SPropertyValueChangeAction(JSONWidgetBase* actionSource, QString changedValue, QString oldValue, QJsonValue::Type valueType)
 	:ChangedValue(changedValue), OldValue(oldValue), ValueType(valueType)
 {
-	ActionSoure = actionSoure;
+	ActionSource = actionSource;
 	ActionType = Type::ValueChange;
 }
 
-EditorActions::SPropertyTypeSelectionChangeAction::SPropertyTypeSelectionChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue)
+EditorActions::SPropertyTypeSelectionChangeAction::SPropertyTypeSelectionChangeAction(JSONWidgetBase* actionSource, QString changedValue, QString oldValue)
 	:ChangedValue(changedValue), OldValue(oldValue)
 {
-	ActionSoure = actionSoure;
+	ActionSource = actionSource;
 	ActionType = Type::TypeChange;
 }
 
-EditorActions::SWidgetIdChangeAction::SWidgetIdChangeAction(JSONWidgetBase* actionSoure, JSONWidgetBase* movedChild, int oldId, int newId)
+EditorActions::SWidgetIdChangeAction::SWidgetIdChangeAction(JSONWidgetBase* actionSource, JSONWidgetBase* movedChild, int oldId, int newId)
 	:MovedChild(movedChild),OldId(oldId),NewId(newId)
 {
-	ActionSoure = actionSoure;
+	ActionSource = actionSource;
 	ActionType = Type::IdInParentChange;
 }
 
-EditorActions::SNameChangeAction::SNameChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue)
+EditorActions::SNameChangeAction::SNameChangeAction(JSONWidgetBase* actionSource, QString changedValue, QString oldValue)
 	:ChangedValue(changedValue), OldValue(oldValue)
 {
-	ActionSoure = actionSoure;
+	ActionSource = actionSource;
 	ActionType = Type::NameChange;
 }
 
-EditorActions::STreeRemovalAction::STreeRemovalAction(JSONWidgetBase* actionSoure, QJsonValue treeValue, QString objectName, bool isArray, bool isProperty)
+EditorActions::STreeRemovalAction::STreeRemovalAction(JSONWidgetBase* actionSource, QJsonValue treeValue, QString objectName, bool isArray, bool isProperty)
 	:TreeValue(treeValue),ObjectName(objectName),IsArray(isArray), IsProperty(isProperty)
 {
-	ActionSoure = actionSoure;
+	ActionSource = actionSource;
 	ActionType = Type::TreeRemoved;
+}
+
+EditorActions::STreeAditionAction::STreeAditionAction(JSONWidgetBase* actionSource, JSONWidgetBase* parent)
+	:Parent(parent)
+{
+	ActionSource = actionSource;
+	ActionType = Type::TreeAdded;
 }

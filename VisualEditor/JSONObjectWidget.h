@@ -31,6 +31,8 @@ public:
 	void AddChildObject(JSONObjectWidget*);
 
 	void OnChildChanged(EditorActions::SEditorAction* action);
+
+	virtual void DeleteChild(JSONWidgetBase* child)override;
 signals:
 	void OnChangeInChild(EditorActions::SEditorAction*);
 public:

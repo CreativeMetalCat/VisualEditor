@@ -81,7 +81,7 @@ void FileTabWidget::UndoAction()
             //we have to call same action but with reversed values
 
             //the event MUST use only JSONProperty so we don't do any checks
-            JSONPropertyWidget* prop = static_cast<JSONPropertyWidget*>(action->ActionSoure);
+            JSONPropertyWidget* prop = static_cast<JSONPropertyWidget*>(action->ActionSource);
             prop->ChangeTypeSelection(action->OldValue);
 
             //remove last action(because we already redid it)
@@ -90,7 +90,7 @@ void FileTabWidget::UndoAction()
         if(act->ActionType == EditorActionType::IdInParentChange)
         {
             EditorActions::SWidgetIdChangeAction* action = static_cast<EditorActions::SWidgetIdChangeAction*>(act);
-            action->ActionSoure->ChangeChildId_NoSignal(action->OldId, action->MovedChild);
+            action->ActionSource->ChangeChildId_NoSignal(action->OldId, action->MovedChild);
 
             //remove last action(because we already redid it)
             Actions.pop_back();
@@ -103,7 +103,7 @@ void FileTabWidget::UndoAction()
         if (act->ActionType == EditorActionType::NameChange)
         {
             EditorActions::SNameChangeAction* action = static_cast<EditorActions::SNameChangeAction*>(act);
-            action->ActionSoure->ChangeName_NoSignal(action->OldValue);
+            action->ActionSource->ChangeName_NoSignal(action->OldValue);
 
             //remove last action(because we already redid it)
             Actions.pop_back();
@@ -112,7 +112,7 @@ void FileTabWidget::UndoAction()
         {
             EditorActions::STreeRemovalAction* action = static_cast<EditorActions::STreeRemovalAction*>(act);
             //only parents can have child trees so we don't need to worry about that
-            JSONObjectWidget* obj = static_cast<JSONObjectWidget*>(action->ActionSoure);
+            JSONObjectWidget* obj = static_cast<JSONObjectWidget*>(action->ActionSource);
             if (action->IsProperty)
             {
                 obj->AddNewProperty(action->ObjectName, action->TreeValue);
@@ -121,6 +121,15 @@ void FileTabWidget::UndoAction()
             {
                 obj->AddChildObject(new JSONObjectWidget(action->TreeValue.toObject(), obj, action->ObjectName, true, action->IsArray));
             }
+
+            //remove last action(because we already redid it)
+            Actions.pop_back();
+        }
+        if (act->ActionType == EditorActionType::TreeAdded)
+        {
+            EditorActions::STreeAditionAction* action = static_cast<EditorActions::STreeAditionAction*>(act);
+            action->Parent->DeleteChild(action->ActionSource);
+
             //remove last action(because we already redid it)
             Actions.pop_back();
         }

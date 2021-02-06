@@ -171,7 +171,7 @@ void JSONPropertyWidget::contextMenuEvent(QContextMenuEvent*event)
 
 			connect(propEdit->GetIdSpinBox(), qOverload<int>(&QSpinBox::valueChanged), obj, qOverload<int>(&JSONWidgetBase::ChangeChildId));
 
-			connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, &JSONWidgetBase::DeleteChild);
+			connect(propEdit->GetDeleteButton(), &QPushButton::pressed, obj, qOverload<>(&JSONWidgetBase::DeleteChild));
 
 			propEdit->showNormal();
 

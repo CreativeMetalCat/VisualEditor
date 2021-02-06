@@ -190,6 +190,20 @@ void JSONObjectWidget::OnChildChanged(EditorActions::SEditorAction* action)
 	this->Name;
 }
 
+void JSONObjectWidget::DeleteChild(JSONWidgetBase* child)
+{
+	//remove it from list so it would not be written into the file
+	ChildObjects.removeOne(child);
+
+	//remove it from window
+	ui->verticalLayoutBox->removeWidget(child);
+
+	//delete it fully to avoid bugs
+	delete child;
+
+	VisualEditorGlobals::IsAnyPropertyBeingEdited = false;
+}
+
 void JSONObjectWidget::ChangeChildId(int newId, JSONWidgetBase* objToEdit)
 {
 	//no point in trying to change child id if it's the only child or given id is bad
@@ -483,6 +497,8 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				ui->verticalLayoutBox->addWidget(prop);
 				prop->Id = ChildObjects.count();
 				ChildObjects.append(prop);
+
+				emit OnChanged(new EditorActions::STreeAditionAction(prop, this));
 			}
 			//create new empty object
 			if (drop->mimeData()->hasFormat("toolbox/object"))
@@ -502,6 +518,8 @@ bool JSONObjectWidget::eventFilter(QObject* object, QEvent* event)
 				//because we add it in the end we simply set it to (last index + 1), which would basicaly become next last index
 				obj->Id = ChildObjects.count();
 				ChildObjects.append(obj);
+
+				emit OnChanged(new EditorActions::STreeAditionAction(obj,this));
 			}
 			//reparent
 			if (drop->mimeData()->hasFormat("veeditor/movedObject"))

@@ -123,6 +123,8 @@ VisualEditor::VisualEditor(QWidget *parent)
     });
 
     connect(ui.actionUndo, &QAction::triggered, this, &VisualEditor::CallUndoActionInTab);
+
+   
 }
 
 void VisualEditor::SaveCurrentFile()

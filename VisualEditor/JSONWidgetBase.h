@@ -27,7 +27,7 @@ namespace EditorActions
 		Type ActionType = Type::None;
 
 		//widget in which action has happened
-		JSONWidgetBase* ActionSoure;
+		JSONWidgetBase* ActionSource;
 
 		SEditorAction() {}
 
@@ -81,6 +81,8 @@ public slots:
 
 	virtual void DeleteChild() {}
 
+	virtual void DeleteChild(JSONWidgetBase* child) {}
+
 	virtual void DeleteChild_NoSignal() {}
 
 private:
@@ -99,7 +101,7 @@ namespace EditorActions
 
 		QJsonValue::Type ValueType;
 
-		SPropertyValueChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue, QJsonValue::Type valueType);
+		SPropertyValueChangeAction(JSONWidgetBase* ActionSource, QString changedValue, QString oldValue, QJsonValue::Type valueType);
 	};
 
 	class SPropertyTypeSelectionChangeAction :public SEditorAction
@@ -109,7 +111,7 @@ namespace EditorActions
 
 		QString OldValue = "Null";
 
-		SPropertyTypeSelectionChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue);
+		SPropertyTypeSelectionChangeAction(JSONWidgetBase* ActionSource, QString changedValue, QString oldValue);
 	};
 
 	class SWidgetIdChangeAction :public SEditorAction
@@ -121,7 +123,7 @@ namespace EditorActions
 
 		JSONWidgetBase* MovedChild = Q_NULLPTR;
 
-		SWidgetIdChangeAction(JSONWidgetBase* actionSoure, JSONWidgetBase* movedChild, int oldId, int newId);
+		SWidgetIdChangeAction(JSONWidgetBase* ActionSource, JSONWidgetBase* movedChild, int oldId, int newId);
 	};
 
 	class SNameChangeAction :public SEditorAction
@@ -132,7 +134,7 @@ namespace EditorActions
 
 		QString OldValue = "Null";
 
-		SNameChangeAction(JSONWidgetBase* actionSoure, QString changedValue, QString oldValue);
+		SNameChangeAction(JSONWidgetBase* ActionSource, QString changedValue, QString oldValue);
 	};
 
 	class STreeRemovalAction :public SEditorAction
@@ -145,7 +147,14 @@ namespace EditorActions
 
 		bool IsProperty = false;
 
-		STreeRemovalAction(JSONWidgetBase* actionSoure, QJsonValue treeValue, QString objectName, bool IsArray = false, bool IsProperty = false);
+		STreeRemovalAction(JSONWidgetBase* ActionSource, QJsonValue treeValue, QString objectName, bool IsArray = false, bool IsProperty = false);
+	};
+
+	class STreeAditionAction :public SEditorAction
+	{
+	public:
+		JSONWidgetBase* Parent;
+		STreeAditionAction(JSONWidgetBase* ActionSource, JSONWidgetBase* parent);
 	};
 }
 
